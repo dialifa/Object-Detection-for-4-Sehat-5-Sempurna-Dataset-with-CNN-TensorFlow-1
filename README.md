@@ -38,7 +38,7 @@ Please describe your Startup Campus final project here. You may should your <b>m
 
 ## Dataset
 Describe your dataset information here. Provide a screenshot for some of your dataset samples (for example, if you're using CIFAR10 dataset, then show an image for each class).
-- Link: https://...
+- Link: https://www.kaggle.com/datasets/andromedagroup05/data-4-sehat-5-sempurna
 
 ## Results
 ### Model Performance
@@ -58,9 +58,15 @@ Feel free to adjust the columns in the table below.
 
 | model | epoch | learning_rate | batch_size | optimizer | val_loss | val_precision | val_recall | ... |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| vit_b_16 | 110 |  0.0001 | 16 | Adam | 0.093 | 88.34% | 84.15% | ... |
+| vit_l_32 | 110 | 0.001 | 16 | Adam | 0.041 | 90.19% | 87.55% | ... |
+| ... | ... | ... | 16 | Adam | ... | ... | ... | ... | 
+
+<!-- | model | epoch | learning_rate | batch_size | optimizer | val_loss | val_precision | val_recall | ... |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | vit_b_16 | 1000 |  0.0001 | 32 | Adam | 0.093 | 88.34% | 84.15% | ... |
 | vit_l_32 | 2500 | 0.00001 | 128 | SGD | 0.041 | 90.19% | 87.55% | ... |
-| ... | ... | ... | ... | ... | ... | ... | ... | ... | 
+| ... | ... | ... | ... | ... | ... | ... | ... | ... |  -->
 
 #### 2. Ablation Study
 Any improvements or modifications of your base model, should be summarized in this table. Feel free to adjust the columns in the table below.
@@ -78,7 +84,7 @@ Insert an image regarding your training and evaluation performances (especially 
 Show some implementations (demos) of this model. Show **at least 10 images** of how your model performs on the testing data.
 
 ### Deployment (Optional)
-Describe and show how you deploy this project (e.g., using Streamlit or Flask), if any.
+Describe and show how you deploy this project (e.g., using Streamlit ), if any.
 
 ## Supporting Documents
 ### Presentation Deck
