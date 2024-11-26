@@ -9,14 +9,14 @@ Please describe your Startup Campus final project here. You may should your <b>m
 ## Contributor
 | Full Name | Affiliation | Email | LinkedIn | Role |
 | --- | --- | --- | --- | --- |
-| Mochamad Faisal Akbar | Universitas Sebelas Maret | faisalzogg022@gmail.com | [link](https://www.linkedin.com/in/m-faisal-akbar) | Team Lead |
-| Firman Sanjaya | Politeknik Harapan Bersama | firmansanjaya2301@gmail.com | [link](https://www.linkedin.com/in/firman-sanjaya-ab5001332) | Team Member |
-| Nasywa Raichanah | Universitas Sebelas Maret | nasywaraichanah15.2@gmail.com | [link](https://www.linkedin.com/in/nasywaraichanah/) |Team Member |
+| Mochamad Faisal Akbar | Universitas Sebelas Maret | faisalzogg022@gmail.com | [Profile Linkedln](https://www.linkedin.com/in/m-faisal-akbar) | Team Lead |
+| Firman Sanjaya | Politeknik Harapan Bersama | firmansanjaya2301@gmail.com | [Profile Linkedln](https://www.linkedin.com/in/firman-sanjaya-ab5001332) | Team Member |
+| Nasywa Raichanah | Universitas Sebelas Maret | nasywaraichanah15.2@gmail.com | [Profile Linkedln](https://www.linkedin.com/in/nasywaraichanah/) |Team Member |
 | ... | ... | ... | ... | ... |
 | ... | ... | ... | ... | ... |
 | ... | ... | ... | ... | ... |
 | ... | ... | ... | ... | ... |
-| Nicholas Dominic | Startup Campus, AI Track | nic.dominic@icloud.com | [link](https://linkedin.com/in/nicholas-dominic) | Supervisor |
+| Nicholas Dominic | Startup Campus, AI Track | nic.dominic@icloud.com | [Profile Linkedln](https://linkedin.com/in/nicholas-dominic) | Supervisor |
 
 ## Setup
 ### Prerequisite Packages (Dependencies)
@@ -38,7 +38,7 @@ Please describe your Startup Campus final project here. You may should your <b>m
 
 ## Dataset
 Describe your dataset information here. Provide a screenshot for some of your dataset samples (for example, if you're using CIFAR10 dataset, then show an image for each class).
-- Link: https://www.kaggle.com/datasets/andromedagroup05/data-4-sehat-5-sempurna
+- Link: [Dataset 4 Sehat 5 Sempurna](https://www.kaggle.com/datasets/andromedagroup05/data-4-sehat-5-sempurna)
 
 ## Results
 ### Model Performance

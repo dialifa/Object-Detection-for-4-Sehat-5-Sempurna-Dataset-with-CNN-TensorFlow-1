@@ -37,7 +37,7 @@ with st.sidebar:
 @st.cache_resource
 def load_detection_model():
     try:
-        model = load_model('./model/best_model.h5')
+        model = load_model('./model/model.h5')
         return model
     except Exception as e:
         st.error(f"Error loading model: {str(e)}")
