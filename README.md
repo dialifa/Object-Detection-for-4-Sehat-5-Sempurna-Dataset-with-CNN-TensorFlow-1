@@ -29,6 +29,7 @@ Please describe your Startup Campus final project here. You may should your <b>m
 
 ### Environment
 | | |
+| --- | --- |
 | CPU | 12th Gen Intel(R) Core(TM) i7-1260P (16 CPUs), ~2.1GHz |
 | GPU | Laptop: Intel(R) Iris(R) Xe Graphics , Kaggle: Nvidia P100 (x1) |
 | ROM | 476,92 GB SSD |
