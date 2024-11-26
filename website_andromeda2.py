@@ -38,7 +38,7 @@ elif selected == "Upload Image":
     # Load model
 @st.cache_resource
 def load_detection_model():
-    return load_model('./model/best_model.h5')
+    return load_model('./model/object_detection_model_2.h5')
 
 model = load_detection_model()
 
@@ -48,6 +48,7 @@ class_names = ['karbohidrat', 'protein', 'sayur', 'buah', 'minuman']
 # Preprocess image for model input
 def preprocess_image(image):
     image = cv2.resize(image, (224, 224))
+    # image = cv2.resize(image, (150, 150))
     image = tf.keras.applications.mobilenet_v2.preprocess_input(image)
     return np.expand_dims(image, axis=0)
 
@@ -140,13 +141,14 @@ elif selected == "Live Camera":
     st.title("Live Camera")
 
 # Load model
-    model = load_model('./model/best_model.h5')
+    model = load_model('./model/model_lama.h5')
 
 # Define class names
     class_names = ['karbohidrat', 'protein', 'sayur', 'buah', 'minuman']
 
     def preprocess_image(image):
         image = cv2.resize(image, (224, 224))
+        # image = cv2.resize(image, (150, 150))
         image = tf.keras.applications.mobilenet_v2.preprocess_input(image)
         return np.expand_dims(image, axis=0)
 
