@@ -4,8 +4,7 @@ tensorflow
 opencv-python-headless
 numpy
 pillow
-# gdown
+gdown
 requests
-huggingface_hub
-google-cloud-storage
+
 
