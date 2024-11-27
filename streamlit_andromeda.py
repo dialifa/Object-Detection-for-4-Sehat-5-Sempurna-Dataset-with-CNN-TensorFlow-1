@@ -7,6 +7,7 @@ from tensorflow.keras.models import load_model
 from PIL import Image
 import time
 import gdown  # Import gdown untuk mengunduh dari Google Drive
+import os
 
 # Page configuration
 st.set_page_config(
