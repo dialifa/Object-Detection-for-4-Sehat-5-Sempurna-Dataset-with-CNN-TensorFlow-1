@@ -6,6 +6,7 @@ import numpy as np
 from tensorflow.keras.models import load_model
 from PIL import Image
 import time
+import gdown  # Import gdown untuk mengunduh dari Google Drive
 
 # Page configuration
 st.set_page_config(
@@ -13,6 +14,9 @@ st.set_page_config(
     page_icon="🍽️",
     layout="wide"
 )
+
+MODEL_ID = '1LINo5tefh3ssH0890P8TJIXISrD7EMQc' 
+MODEL_PATH = './server model/model.h5'
 
 # Color scheme for different food categories
 DETECTION_COLORS = {
@@ -37,11 +41,24 @@ with st.sidebar:
 @st.cache_resource
 def load_detection_model():
     try:
-        model = load_model('./model/model.h5')
+        # Unduh model jika belum ada
+        if not os.path.exists(MODEL_PATH):
+            url = f'https://drive.google.com/uc?id=1LINo5tefh3ssH0890P8TJIXISrD7EMQc'
+            st.info("Downloading model from Google Drive...")
+            gdown.download(url, MODEL_PATH, quiet=False)
+
+        model = load_model(MODEL_PATH)
         return model
     except Exception as e:
         st.error(f"Error loading model: {str(e)}")
         return None
+
+    # try:
+    #     model = load_model('./model/model.h5')
+    #     return model
+    # except Exception as e:
+    #     st.error(f"Error loading model: {str(e)}")
+    #     return None
 
 # Global variables
 CLASS_NAMES = ["karbohidrat", "protein", "buah", "sayur", "minuman"]
