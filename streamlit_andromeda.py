@@ -18,47 +18,47 @@ st.set_page_config(
     layout="wide"
 )
 
-def download_file_from_google_drive(file_id, destination):
-    def get_confirm_token(response):
-        for key, value in response.cookies.items():
-            if key.startswith('download_warning'):
-                return value
-        return None
+# def download_file_from_google_drive(file_id, destination):
+#     def get_confirm_token(response):
+#         for key, value in response.cookies.items():
+#             if key.startswith('download_warning'):
+#                 return value
+#         return None
 
-    def save_response_content(response, destination):
-        CHUNK_SIZE = 32768
-        total_size = int(response.headers.get('content-length', 0))
+#     def save_response_content(response, destination):
+#         CHUNK_SIZE = 32768
+#         total_size = int(response.headers.get('content-length', 0))
         
-        # Create progress bar
-        progress_bar = st.progress(0)
-        progress_text = st.empty()
+#         # Create progress bar
+#         progress_bar = st.progress(0)
+#         progress_text = st.empty()
         
-        with open(destination, "wb") as f:
-            downloaded = 0
-            for chunk in response.iter_content(CHUNK_SIZE):
-                if chunk:
-                    f.write(chunk)
-                    downloaded += len(chunk)
-                    # Update progress bar
-                    if total_size:
-                        progress = (downloaded / total_size)
-                        progress_bar.progress(progress)
-                        progress_text.text(f"Downloaded: {downloaded}/{total_size} bytes ({progress:.1%})")
+#         with open(destination, "wb") as f:
+#             downloaded = 0
+#             for chunk in response.iter_content(CHUNK_SIZE):
+#                 if chunk:
+#                     f.write(chunk)
+#                     downloaded += len(chunk)
+#                     # Update progress bar
+#                     if total_size:
+#                         progress = (downloaded / total_size)
+#                         progress_bar.progress(progress)
+#                         progress_text.text(f"Downloaded: {downloaded}/{total_size} bytes ({progress:.1%})")
         
-        progress_bar.empty()
-        progress_text.empty()
+#         progress_bar.empty()
+#         progress_text.empty()
 
-    url = f"https://drive.google.com/uc?id={file_id}"
-    session = requests.Session()
+#     url = f"https://drive.google.com/uc?id={file_id}"
+#     session = requests.Session()
 
-    response = session.get(url, stream=True)
-    token = get_confirm_token(response)
+#     response = session.get(url, stream=True)
+#     token = get_confirm_token(response)
 
-    if token:
-        params = {'confirm': token}
-        response = session.get(url, params=params, stream=True)
+#     if token:
+#         params = {'confirm': token}
+#         response = session.get(url, params=params, stream=True)
 
-    save_response_content(response, destination)
+#     save_response_content(response, destination)
 
 MODEL_ID = '1LINo5tefh3ssH0890P8TJIXISrD7EMQc' 
 MODEL_PATH = 'model.h5'
@@ -85,45 +85,45 @@ with st.sidebar:
 # Cache the model loading
 @st.cache_resource
 def load_detection_model():
-    try:
-        # Buat folder model jika belum ada
-        os.makedirs('model', exist_ok=True)
-        
-        # Download model jika belum ada
-        if not os.path.exists(MODEL_PATH):
-            st.info("Downloading model from Google Drive...")
-            try:
-                download_file_from_google_drive(MODEL_ID, MODEL_PATH)
-                st.success("Model downloaded successfully!")
-            except Exception as e:
-                st.error(f"Error downloading model: {str(e)}")
-                return None
-        
-        # Verifikasi file size
-        if os.path.getsize(MODEL_PATH) < 1000:  # Minimal size in bytes
-            st.error("Downloaded file seems corrupted. Retrying download...")
-            os.remove(MODEL_PATH)
-            return load_detection_model()
-        
-        # Load model
-        model = load_model(MODEL_PATH)
-        return model
-    except Exception as e:
-        st.error(f"Error loading model: {str(e)}")
-        return None
-
     # try:
-    #     # Unduh model jika belum ada
+    #     # Buat folder model jika belum ada
+    #     os.makedirs('model', exist_ok=True)
+        
+    #     # Download model jika belum ada
     #     if not os.path.exists(MODEL_PATH):
-    #         url = f'https://drive.google.com/uc?id=1LINo5tefh3ssH0890P8TJIXISrD7EMQc'
-    #         st.info("Downloading model from Google Drive")
-    #         gdown.download(url, MODEL_PATH, quiet=False)
-
+    #         st.info("Downloading model from Google Drive...")
+    #         try:
+    #             download_file_from_google_drive(MODEL_ID, MODEL_PATH)
+    #             st.success("Model downloaded successfully!")
+    #         except Exception as e:
+    #             st.error(f"Error downloading model: {str(e)}")
+    #             return None
+        
+    #     # Verifikasi file size
+    #     if os.path.getsize(MODEL_PATH) < 1000:  # Minimal size in bytes
+    #         st.error("Downloaded file seems corrupted. Retrying download...")
+    #         os.remove(MODEL_PATH)
+    #         return load_detection_model()
+        
+    #     # Load model
     #     model = load_model(MODEL_PATH)
     #     return model
     # except Exception as e:
     #     st.error(f"Error loading model: {str(e)}")
     #     return None
+
+    try:
+        # Unduh model jika belum ada
+        if not os.path.exists(MODEL_PATH):
+            url = f'https://drive.google.com/uc?id=1LINo5tefh3ssH0890P8TJIXISrD7EMQc'
+            st.info("Downloading model from Google Drive")
+            gdown.download(url, MODEL_PATH, quiet=False)
+
+        model = load_model(MODEL_PATH)
+        return model
+    except Exception as e:
+        st.error(f"Error loading model: {str(e)}")
+        return None
 
     # try:
     #     model = load_model('./model/model.h5')
