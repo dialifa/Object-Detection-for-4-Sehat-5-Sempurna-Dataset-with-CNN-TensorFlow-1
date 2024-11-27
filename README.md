@@ -1,8 +1,20 @@
 # Automated Nutritional Analysis: Object Detection for Balanced Meal Evaluation According to 4 Sehat 5 Sempurna
-### Object-Detection-for-4-Sehat-5-Sempurna-Dataset-with-CNN-TensorFlow
+### Andromeda Group's Startup Campus Final Project
 
 ## Project Description
-Mendeteksi tingkat nutrisi dan gizi pada sepiring makanan menggunakan Object Detection dan berpatok pada 4 Sehat 5 Sempurna. Kami membangun program ini dengan menggunakan library TensorFlow dan menggunakan algoritma CNN.
+Final project untuk program Startup Campus pada track Artificial Intelligence. Proyek ini bertujuan untuk mengembangkan aplikasi Automated Nutritional Analysis: Object Detection for Balanced Meal Evaluation According to 4 Sehat 5 Sempurna. Aplikasi ini menggunakan model deteksi objek berbasis Convolutional Neural Networks (CNN) untuk menganalisis komposisi makanan dan mengevaluasi keseimbangan gizi berdasarkan prinsip 4 Sehat 5 Sempurna. Proyek ini dirancang untuk mendukung edukasi gizi masyarakat dengan teknologi berbasis AI. Mendeteksi tingkat nutrisi dan gizi pada sepiring makanan menggunakan Object Detection dan berpatok pada 4 Sehat 5 Sempurna.
+
+## Fitur Utama
+- Deteksi dan klasifikasi makanan menggunakan CNN.
+- Tampilan interaktif dengan anotasi visual objek makanan.
+- Evaluasi keseimbangan nutrisi secara otomatis.
+- Dukungan data lokal untuk prinsip 4 Sehat 5 Sempurna.
+  
+## Teknologi yang Digunakan:
+- Python
+- TensorFlow/Keras
+- OpenCV
+- Dataset makanan dan minuman
 
 Please describe your Startup Campus final project here. You may should your <b>model architecture</b> in JPEG or GIF.
 
