@@ -24,9 +24,9 @@ Please describe your Startup Campus final project here. You may should your <b>m
 | Mochamad Faisal Akbar | Universitas Sebelas Maret | faisalzogg022@gmail.com | [Profile Linkedln](https://www.linkedin.com/in/m-faisal-akbar) | Team Lead |
 | Firman Sanjaya | Politeknik Harapan Bersama | firmansanjaya2301@gmail.com | [Profile Linkedln](https://www.linkedin.com/in/firman-sanjaya-ab5001332) | Team Member |
 | Nasywa Raichanah | Universitas Sebelas Maret | nasywaraichanah15.2@gmail.com | [Profile Linkedln](https://www.linkedin.com/in/nasywaraichanah/) |Team Member |
-| ... | ... | ... | ... | ... |
-| ... | ... | ... | ... | ... |
-| ... | ... | ... | ... | ... |
+| Muhammad Ihsan Robbani | Politeknik Negeri Sriwijaya | ihsanrobbani23@gmail.com | [Profile LinkedIn](https://www.linkedin.com/in/ihsanrobbani) | Team Member |
+| Advent Samuel Halomoan | Politeknik Negeri Sriwijaya | adventsamuelhalomoan36@gmail.com | [Profile LinkedIn](https://www.linkedin.com/in/advent-samuel-halomoan-957b69221/) | Team Member |
+| Gally Sabara | Politeknik Negeri Sriwijaya | gallysabara44@gmail.com | [Profile LinkedIn](https://www.linkedin.com/in/gally-sabara-597397335) | Team Member |
 | ... | ... | ... | ... | ... |
 | Nicholas Dominic | Startup Campus, AI Track | nic.dominic@icloud.com | [Profile Linkedln](https://linkedin.com/in/nicholas-dominic) | Supervisor |
 
