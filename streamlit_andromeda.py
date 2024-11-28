@@ -60,7 +60,7 @@ st.set_page_config(
 
 #     save_response_content(response, destination)
 
-MODEL_ID = '1LINo5tefh3ssH0890P8TJIXISrD7EMQc' 
+MODEL_ID = '1ogRogs-V0Sq-yeQi0fHrw1SmnkCZv9Nu' 
 MODEL_PATH = 'model.h5'
 
 # Color scheme for different food categories
@@ -115,7 +115,7 @@ def load_detection_model():
     try:
         # Unduh model jika belum ada
         if not os.path.exists(MODEL_PATH):
-            url = f'https://drive.google.com/uc?id=1LINo5tefh3ssH0890P8TJIXISrD7EMQc'
+            url = f'https://drive.google.com/uc?id=1ogRogs-V0Sq-yeQi0fHrw1SmnkCZv9Nu'
             st.info("Downloading model from Google Drive")
             gdown.download(url, MODEL_PATH, quiet=False)
 
