@@ -80,6 +80,16 @@ with st.sidebar:
         icons=["house", "upload", "camera"],
         menu_icon="cast",
         default_index=0
+
+    )
+    # Nambahin confidence threshold di sidebar
+    confidence_threshold = st.slider(
+        "Confidence Threshold", 
+        min_value=0.0, 
+        max_value=1.0, 
+        value=0.5, 
+        step=0.05
+
     )
 
 # Cache the model loading
@@ -132,9 +142,19 @@ def load_detection_model():
     #     st.error(f"Error loading model: {str(e)}")
     #     return None
 
+# Fungsi untuk mendeteksi kamera yang tersedia
+def list_available_cameras(max_cameras=10):
+    available_cameras = []
+    for i in range(max_cameras):
+        cap = cv2.VideoCapture(i)
+        if cap.isOpened():
+            available_cameras.append(i)
+            cap.release()
+    return available_cameras
+
 # Global variables
 CLASS_NAMES = ["karbohidrat", "protein", "buah", "sayur", "minuman"]
-CONFIDENCE_THRESHOLD = 0.5
+# CONFIDENCE_THRESHOLD = 0.5
 
 def preprocess_frame(frame, target_size=(224, 224)):
     """Preprocess frame for model input"""
@@ -195,31 +215,56 @@ def draw_detection_boxes(image, detections):
     
     return image_with_boxes
 
-def detect_objects(image, model):
-    """Detect objects in the image"""
+# def detect_objects(image, model):
+#     """Detect objects in the image"""
+#     height, width = image.shape[:2]
+#     regions = get_region_proposals(image)
+#     detections = []
+    
+#     for x, y, w, h in regions:
+#         # Extract region
+#         region = image[y:y+h, x:x+w]
+        
+#         # Preprocess region
+#         processed_region = preprocess_frame(region)
+        
+#         # Get predictions
+#         predictions = model.predict(processed_region, verbose=0)[0]
+#         confidence = float(np.max(predictions))
+        
+#         if confidence >= CONFIDENCE_THRESHOLD:
+#             class_idx = np.argmax(predictions)
+#             detections.append({
+#                 'box': (x, y, w, h),
+#                 'confidence': confidence,
+#                 'class': CLASS_NAMES[class_idx]
+#             })
+    
+#     return detections
+
+def detect_objects(image, model, threshold=0.5):
     height, width = image.shape[:2]
     regions = get_region_proposals(image)
     detections = []
-    
+
     for x, y, w, h in regions:
         # Extract region
         region = image[y:y+h, x:x+w]
-        
+
         # Preprocess region
         processed_region = preprocess_frame(region)
-        
+
         # Get predictions
         predictions = model.predict(processed_region, verbose=0)[0]
         confidence = float(np.max(predictions))
-        
-        if confidence >= CONFIDENCE_THRESHOLD:
+        if confidence >= threshold:
             class_idx = np.argmax(predictions)
             detections.append({
                 'box': (x, y, w, h),
                 'confidence': confidence,
                 'class': CLASS_NAMES[class_idx]
             })
-    
+
     return detections
 
 # Home page
@@ -241,75 +286,155 @@ if selected == "Home":
     """)
 
 # Upload Image page
+# elif selected == "Upload Image":
+#     st.title("Food Image Detection")
+    
+#     model = load_detection_model()
+#     if model is None:
+#         st.error("Failed to load model. Please check the model file.")
+#     else:
+#         uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
+        
+#         if uploaded_file is not None:
+#             # Load and display original image
+#             image = Image.open(uploaded_file)
+#             image_np = np.array(image)
+#             image_cv = cv2.cvtColor(image_np, cv2.COLOR_RGB2BGR)
+            
+#             col1, col2 = st.columns(2)
+#             with col1:
+#                 st.image(image, caption="Original Image", use_column_width=True)
+            
+#             # Process image
+#             if st.button("Detect Food Items"):
+#                 with st.spinner("Processing..."):
+#                     # Detect objects
+#                     detections = detect_objects(image_cv, model)
+                    
+#                     # Draw detection boxes
+#                     result_image = draw_detection_boxes(image_cv, detections)
+#                     result_image = cv2.cvtColor(result_image, cv2.COLOR_BGR2RGB)
+                    
+#                     # Display results
+#                     with col2:
+#                         st.image(result_image, caption="Detection Result", use_column_width=True)
+                    
+#                     # Display detection details
+#                     st.subheader("Detection Details:")
+#                     for det in detections:
+#                         st.write(f"- Found {det['class']} with {det['confidence']:.2f} confidence")
+
 elif selected == "Upload Image":
     st.title("Food Image Detection")
-    
+
     model = load_detection_model()
     if model is None:
         st.error("Failed to load model. Please check the model file.")
     else:
         uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
-        
+
         if uploaded_file is not None:
-            # Load and display original image
+
             image = Image.open(uploaded_file)
             image_np = np.array(image)
             image_cv = cv2.cvtColor(image_np, cv2.COLOR_RGB2BGR)
-            
+
             col1, col2 = st.columns(2)
             with col1:
-                st.image(image, caption="Original Image", use_column_width=True)
-            
-            # Process image
+                st.image(image, caption="Original Image", use_container_width=True)
             if st.button("Detect Food Items"):
                 with st.spinner("Processing..."):
-                    # Detect objects
-                    detections = detect_objects(image_cv, model)
-                    
+
+                    detections = detect_objects(image_cv, model, threshold=confidence_threshold)
+
                     # Draw detection boxes
                     result_image = draw_detection_boxes(image_cv, detections)
                     result_image = cv2.cvtColor(result_image, cv2.COLOR_BGR2RGB)
-                    
+
                     # Display results
                     with col2:
-                        st.image(result_image, caption="Detection Result", use_column_width=True)
-                    
+                        st.image(result_image, caption="Detection Result", use_container_width=True)
+
                     # Display detection details
                     st.subheader("Detection Details:")
                     for det in detections:
                         st.write(f"- Found {det['class']} with {det['confidence']:.2f} confidence")
 
+
 # Live Camera page
+# elif selected == "Live Camera":
+#     st.title("Live Camera Detection")
+    
+#     model = load_detection_model()
+#     if model is None:
+#         st.error("Failed to load model. Please check the model file.")
+#     else:
+#         # Add camera controls
+#         run = st.checkbox('Start Camera')
+#         FRAME_WINDOW = st.image([])
+        
+#         camera = cv2.VideoCapture(0)
+        
+#         while run:
+#             ret, frame = camera.read()
+#             if not ret:
+#                 st.error("Failed to access camera")
+#                 break
+            
+#             # Detect objects
+#             detections = detect_objects(frame, model)
+            
+#             # Draw detection boxes
+#             frame_with_detections = draw_detection_boxes(frame, detections)
+            
+#             # Convert BGR to RGB for display
+#             frame_rgb = cv2.cvtColor(frame_with_detections, cv2.COLOR_BGR2RGB)
+#             FRAME_WINDOW.image(frame_rgb)
+            
+#             # Add small delay to reduce CPU usage
+#             time.sleep(0.1)
+            
+#         camera.release()
+
 elif selected == "Live Camera":
     st.title("Live Camera Detection")
-    
+
     model = load_detection_model()
     if model is None:
         st.error("Failed to load model. Please check the model file.")
     else:
-        # Add camera controls
-        run = st.checkbox('Start Camera')
-        FRAME_WINDOW = st.image([])
-        
-        camera = cv2.VideoCapture(0)
-        
-        while run:
-            ret, frame = camera.read()
-            if not ret:
-                st.error("Failed to access camera")
-                break
+        # List available cameras
+        cameras = list_available_cameras()
+        if not cameras:
+            st.error("No cameras found. Please connect a camera and refresh.")
+        else:
+            camera_index = st.selectbox("Select Camera", cameras, format_func=lambda x: f"Camera {x}")
+            run = st.checkbox("Start Camera")
+            FRAME_WINDOW = st.image([])
             
-            # Detect objects
-            detections = detect_objects(frame, model)
+            if run:
+                # Open the selected camera
+                camera = cv2.VideoCapture(camera_index)
+                if not camera.isOpened():
+                    st.error(f"Failed to open camera {camera_index}.")
+                else:
+                    while run:
+                        ret, frame = camera.read()
+                        if not ret:
+                            st.error(f"Failed to read from camera {camera_index}.")
+                            break
+
+                        # Detect objects
+                        detections = detect_objects(frame, model)
             
-            # Draw detection boxes
-            frame_with_detections = draw_detection_boxes(frame, detections)
+                        # Draw detection boxes
+                        frame_with_detections = draw_detection_boxes(frame, detections)
             
-            # Convert BGR to RGB for display
-            frame_rgb = cv2.cvtColor(frame_with_detections, cv2.COLOR_BGR2RGB)
-            FRAME_WINDOW.image(frame_rgb)
+                        # Convert BGR to RGB for display
+                        frame_rgb = cv2.cvtColor(frame_with_detections, cv2.COLOR_BGR2RGB)
+                        FRAME_WINDOW.image(frame_rgb)
             
-            # Add small delay to reduce CPU usage
-            time.sleep(0.1)
+                        # Add small delay to reduce CPU usage
+                        time.sleep(0.1)
             
-        camera.release()
+                    camera.release()
