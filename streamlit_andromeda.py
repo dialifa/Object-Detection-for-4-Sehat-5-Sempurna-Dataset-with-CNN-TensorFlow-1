@@ -146,7 +146,7 @@ def load_detection_model():
 def list_available_cameras(max_cameras=10):
     available_cameras = []
     for i in range(max_cameras):
-        cap = cv2.VideoCapture(i)
+        cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)  # Backend DirectShow
         if cap.isOpened():
             available_cameras.append(i)
             cap.release()
