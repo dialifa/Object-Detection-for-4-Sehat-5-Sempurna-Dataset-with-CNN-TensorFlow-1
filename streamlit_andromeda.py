@@ -95,40 +95,27 @@ with st.sidebar:
 # Cache the model loading
 @st.cache_resource
 def load_detection_model():
-    # try:
-    #     # Buat folder model jika belum ada
-    #     os.makedirs('model', exist_ok=True)
-        
-    #     # Download model jika belum ada
-    #     if not os.path.exists(MODEL_PATH):
-    #         st.info("Downloading model from Google Drive...")
-    #         try:
-    #             download_file_from_google_drive(MODEL_ID, MODEL_PATH)
-    #             st.success("Model downloaded successfully!")
-    #         except Exception as e:
-    #             st.error(f"Error downloading model: {str(e)}")
-    #             return None
-        
-    #     # Verifikasi file size
-    #     if os.path.getsize(MODEL_PATH) < 1000:  # Minimal size in bytes
-    #         st.error("Downloaded file seems corrupted. Retrying download...")
-    #         os.remove(MODEL_PATH)
-    #         return load_detection_model()
-        
-    #     # Load model
-    #     model = load_model(MODEL_PATH)
-    #     return model
-    # except Exception as e:
-    #     st.error(f"Error loading model: {str(e)}")
-    #     return None
-
     try:
-        # Unduh model jika belum ada
+        # Buat folder model jika belum ada
+        os.makedirs('model', exist_ok=True)
+        
+        # Download model jika belum ada
         if not os.path.exists(MODEL_PATH):
-            url = f'https://drive.google.com/uc?id=1ogRogs-V0Sq-yeQi0fHrw1SmnkCZv9Nu'
-            st.info("Downloading model from Google Drive")
-            gdown.download(url, MODEL_PATH, quiet=False)
-
+            st.info("Downloading model from Google Drive...")
+            try:
+                download_file_from_google_drive(MODEL_ID, MODEL_PATH)
+                st.success("Model downloaded successfully!")
+            except Exception as e:
+                st.error(f"Error downloading model: {str(e)}")
+                return None
+        
+        # Verifikasi file size
+        if os.path.getsize(MODEL_PATH) < 1000:  # Minimal size in bytes
+            st.error("Downloaded file seems corrupted. Retrying download...")
+            os.remove(MODEL_PATH)
+            return load_detection_model()
+        
+        # Load model
         model = load_model(MODEL_PATH)
         return model
     except Exception as e:
@@ -136,7 +123,13 @@ def load_detection_model():
         return None
 
     # try:
-    #     model = load_model('./model/model.h5')
+    #     # Unduh model jika belum ada
+    #     if not os.path.exists(MODEL_PATH):
+    #         url = f'https://drive.google.com/uc?id=1ogRogs-V0Sq-yeQi0fHrw1SmnkCZv9Nu'
+    #         st.info("Downloading model from Google Drive")
+    #         gdown.download(url, MODEL_PATH, quiet=False)
+
+    #     model = load_model(MODEL_PATH)
     #     return model
     # except Exception as e:
     #     st.error(f"Error loading model: {str(e)}")
@@ -146,14 +139,25 @@ def load_detection_model():
 def list_available_cameras(max_cameras=10):
     available_cameras = []
     for i in range(max_cameras):
-        cap = cv2.VideoCapture(i, cv2.CAP_DSHOW)  # Backend DirectShow
-        if cap.isOpened():
-            available_cameras.append(i)
-            cap.release()
+        try:
+            # Coba kedua backend: DirectShow dan default
+            cap = cv2.VideoCapture(i, cv2.CAP_DSHOW)  # Coba DirectShow dulu
+            if not cap.isOpened():
+                cap = cv2.VideoCapture(i)  # Coba backend default
+            
+            if cap.isOpened():
+                # Verifikasi bahwa kamera benar-benar bisa membaca frame
+                ret, frame = cap.read()
+                if ret:
+                    available_cameras.append(i)
+                cap.release()
+        except Exception as e:
+            continue
     return available_cameras
 
 # Global variables
 CLASS_NAMES = ["karbohidrat", "protein", "buah", "sayur", "minuman"]
+# CLASS_NAMES = ["buah", "karbohidrat", "minuman", "protein", "sayur"]
 # CONFIDENCE_THRESHOLD = 0.5
 
 def preprocess_frame(frame, target_size=(224, 224)):
@@ -361,6 +365,7 @@ elif selected == "Upload Image":
                         st.write(f"- Found {det['class']} with {det['confidence']:.2f} confidence")
 
 
+
 # Live Camera page
 # elif selected == "Live Camera":
 #     st.title("Live Camera Detection")
@@ -405,39 +410,57 @@ elif selected == "Live Camera":
     else:
         # List available cameras
         cameras = list_available_cameras()
+
         if not cameras:
-            st.error("No cameras found. Please connect a camera and refresh.")
-        else:
-            camera_index = st.selectbox("Select Camera", cameras, format_func=lambda x: f"Camera {x}")
+            st.warning("No external cameras detected. Trying to use internal camera...")
+            try:
+                cap = cv2.VideoCapture(0)
+                if cap.isOpened():
+                    cameras = [0]
+                cap.release()
+            except:
+                st.error("No cameras found. Please connect a camera and refresh.")
+
+        if cameras:
+            camera_options = {i: f"Camera {i}" + (" (Internal)" if i == 0 else " (External)") 
+                            for i in cameras}
+            camera_index = st.selectbox("Select Camera", options=cameras, format_func=lambda x: camera_options[x])
+
             run = st.checkbox("Start Camera")
             FRAME_WINDOW = st.image([])
             
             if run:
-                # Open the selected camera
-                camera = cv2.VideoCapture(camera_index)
-                if not camera.isOpened():
-                    st.error(f"Failed to open camera {camera_index}.")
-                else:
-                    while run:
-                        ret, frame = camera.read()
-                        if not ret:
-                            st.error(f"Failed to read from camera {camera_index}.")
-                            break
+                camera = None
+                try:
+                    # Coba buka kamera dengan DirectShow terlebih dahulu
+                    camera = cv2.VideoCapture(camera_index,cv2.CAP_DSHOW)
+                    if not camera.isOpened():
+                        # Jika gagal, coba dengan backend default
+                        st.error(f"Failed to open camera {camera_index}.")
+                    else:
+                        while run:
+                            ret, frame = camera.read()
+                            if not ret:
+                                st.error(f"Failed to read from camera {camera_index}.")
+                                break
 
-                        # Detect objects
-                        detections = detect_objects(frame, model)
-            
-                        # Draw detection boxes
-                        frame_with_detections = draw_detection_boxes(frame, detections)
-            
-                        # Convert BGR to RGB for display
-                        frame_rgb = cv2.cvtColor(frame_with_detections, cv2.COLOR_BGR2RGB)
-                        FRAME_WINDOW.image(frame_rgb)
-            
-                        # Add small delay to reduce CPU usage
-                        time.sleep(0.1)
-            
-                    camera.release()
+                            # Detect objects
+                            detections = detect_objects(frame, model, threshold=confidence_threshold)
+                
+                            # Draw detection boxes
+                            frame_with_detections = draw_detection_boxes(frame, detections)
+                
+                            # Convert BGR to RGB for display
+                            frame_rgb = cv2.cvtColor(frame_with_detections, cv2.COLOR_BGR2RGB)
+
+                            FRAME_WINDOW.image(frame_rgb, channels="RGB")
+                            
+                            time.sleep(0.1)
+                except Exception as e:
+                    st.error(f"Error accessing camera:: {str(e)}")
+                finally:
+                    if camera is not None:
+                        camera.release()
 
 
 # import streamlit as st
