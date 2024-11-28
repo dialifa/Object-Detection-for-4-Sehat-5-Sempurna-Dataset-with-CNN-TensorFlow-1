@@ -18,47 +18,47 @@ st.set_page_config(
     layout="wide"
 )
 
-def download_file_from_google_drive(file_id, destination):
-    def get_confirm_token(response):
-        for key, value in response.cookies.items():
-            if key.startswith('download_warning'):
-                return value
-        return None
+# def download_file_from_google_drive(file_id, destination):
+#     def get_confirm_token(response):
+#         for key, value in response.cookies.items():
+#             if key.startswith('download_warning'):
+#                 return value
+#         return None
 
-    def save_response_content(response, destination):
-        CHUNK_SIZE = 32768
-        total_size = int(response.headers.get('content-length', 0))
+#     def save_response_content(response, destination):
+#         CHUNK_SIZE = 32768
+#         total_size = int(response.headers.get('content-length', 0))
         
-        # Create progress bar
-        progress_bar = st.progress(0)
-        progress_text = st.empty()
+#         # Create progress bar
+#         progress_bar = st.progress(0)
+#         progress_text = st.empty()
         
-        with open(destination, "wb") as f:
-            downloaded = 0
-            for chunk in response.iter_content(CHUNK_SIZE):
-                if chunk:
-                    f.write(chunk)
-                    downloaded += len(chunk)
-                    # Update progress bar
-                    if total_size:
-                        progress = (downloaded / total_size)
-                        progress_bar.progress(progress)
-                        progress_text.text(f"Downloaded: {downloaded}/{total_size} bytes ({progress:.1%})")
+#         with open(destination, "wb") as f:
+#             downloaded = 0
+#             for chunk in response.iter_content(CHUNK_SIZE):
+#                 if chunk:
+#                     f.write(chunk)
+#                     downloaded += len(chunk)
+#                     # Update progress bar
+#                     if total_size:
+#                         progress = (downloaded / total_size)
+#                         progress_bar.progress(progress)
+#                         progress_text.text(f"Downloaded: {downloaded}/{total_size} bytes ({progress:.1%})")
         
-        progress_bar.empty()
-        progress_text.empty()
+#         progress_bar.empty()
+#         progress_text.empty()
 
-    url = f"https://drive.google.com/uc?id={file_id}"
-    session = requests.Session()
+#     url = f"https://drive.google.com/uc?id={file_id}"
+#     session = requests.Session()
 
-    response = session.get(url, stream=True)
-    token = get_confirm_token(response)
+#     response = session.get(url, stream=True)
+#     token = get_confirm_token(response)
 
-    if token:
-        params = {'confirm': token}
-        response = session.get(url, params=params, stream=True)
+#     if token:
+#         params = {'confirm': token}
+#         response = session.get(url, params=params, stream=True)
 
-    save_response_content(response, destination)
+#     save_response_content(response, destination)
 
 MODEL_ID = '1ogRogs-V0Sq-yeQi0fHrw1SmnkCZv9Nu' 
 MODEL_PATH = 'model.h5'
@@ -363,6 +363,7 @@ elif selected == "Upload Image":
                     st.subheader("Detection Details:")
                     for det in detections:
                         st.write(f"- Found {det['class']} with {det['confidence']:.2f} confidence")
+
 
 
 # Live Camera page
