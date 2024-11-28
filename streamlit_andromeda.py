@@ -139,20 +139,11 @@ def load_detection_model():
 def list_available_cameras(max_cameras=10):
     available_cameras = []
     for i in range(max_cameras):
-        try:
-            # Coba kedua backend: DirectShow dan default
-            cap = cv2.VideoCapture(i, cv2.CAP_DSHOW)  # Coba DirectShow dulu
-            if not cap.isOpened():
-                cap = cv2.VideoCapture(i)  # Coba backend default
-            
-            if cap.isOpened():
-                # Verifikasi bahwa kamera benar-benar bisa membaca frame
-                ret, frame = cap.read()
-                if ret:
-                    available_cameras.append(i)
-                cap.release()
-        except Exception as e:
-            continue
+        # cap = cv2.VideoCapture(i, cv2.CAP_DSHOW)  # Backend DirectShow
+        cap = cv2.VideoCapture(i)
+        if cap.isOpened():
+            available_cameras.append(i)
+            cap.release()
     return available_cameras
 
 # Global variables
@@ -365,7 +356,6 @@ elif selected == "Upload Image":
                         st.write(f"- Found {det['class']} with {det['confidence']:.2f} confidence")
 
 
-
 # Live Camera page
 # elif selected == "Live Camera":
 #     st.title("Live Camera Detection")
@@ -410,57 +400,41 @@ elif selected == "Live Camera":
     else:
         # List available cameras
         cameras = list_available_cameras()
-
         if not cameras:
-            st.warning("No external cameras detected. Trying to use internal camera...")
-            try:
-                cap = cv2.VideoCapture(0)
-                if cap.isOpened():
-                    cameras = [0]
-                cap.release()
-            except:
-                st.error("No cameras found. Please connect a camera and refresh.")
-
-        if cameras:
-            camera_options = {i: f"Camera {i}" + (" (Internal)" if i == 0 else " (External)") 
-                            for i in cameras}
-            camera_index = st.selectbox("Select Camera", options=cameras, format_func=lambda x: camera_options[x])
-
+            st.error("No cameras found. Please connect a camera and refresh.")
+        else:
+            camera_index = st.selectbox("Select Camera", cameras, format_func=lambda x: f"Camera {x}")
             run = st.checkbox("Start Camera")
             FRAME_WINDOW = st.image([])
             
             if run:
-                camera = None
-                try:
-                    # Coba buka kamera dengan DirectShow terlebih dahulu
-                    camera = cv2.VideoCapture(camera_index,cv2.CAP_DSHOW)
-                    if not camera.isOpened():
-                        # Jika gagal, coba dengan backend default
-                        st.error(f"Failed to open camera {camera_index}.")
-                    else:
-                        while run:
-                            ret, frame = camera.read()
-                            if not ret:
-                                st.error(f"Failed to read from camera {camera_index}.")
-                                break
+                # Open the selected camera
+                camera = cv2.VideoCapture(camera_index)
+                if not camera.isOpened():
+                    st.error(f"Failed to open camera {camera_index}.")
+                else:
+                    try:
+                            while run:
+                                ret, frame = camera.read()
+                                if not ret:
+                                    st.error(f"Failed to read from camera {camera_index}.")
+                                    break
 
-                            # Detect objects
-                            detections = detect_objects(frame, model, threshold=confidence_threshold)
-                
-                            # Draw detection boxes
-                            frame_with_detections = draw_detection_boxes(frame, detections)
-                
-                            # Convert BGR to RGB for display
-                            frame_rgb = cv2.cvtColor(frame_with_detections, cv2.COLOR_BGR2RGB)
-
-                            FRAME_WINDOW.image(frame_rgb, channels="RGB")
-                            
-                            time.sleep(0.1)
-                except Exception as e:
-                    st.error(f"Error accessing camera:: {str(e)}")
-                finally:
-                    if camera is not None:
+                                # Detect objects
+                                detections = detect_objects(frame, model, threshold=confidence_threshold)
+                    
+                                # Draw detection boxes
+                                frame_with_detections = draw_detection_boxes(frame, detections)
+                    
+                                # Convert BGR to RGB for display
+                                frame_rgb = cv2.cvtColor(frame_with_detections, cv2.COLOR_BGR2RGB)
+                                FRAME_WINDOW.image(frame_rgb, channels="RGB")
+                    
+                                # Add small delay to reduce CPU usage
+                                time.sleep(0.1)
+                    finally:
                         camera.release()
+                        cv2.destroyAllWindows()
 
 
 # import streamlit as st
