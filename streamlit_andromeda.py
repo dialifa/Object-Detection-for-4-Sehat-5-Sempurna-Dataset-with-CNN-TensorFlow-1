@@ -459,7 +459,7 @@ st.set_page_config(
 )
 
 MODEL_ID = '1ogRogs-V0Sq-yeQi0fHrw1SmnkCZv9Nu' 
-MODEL_PATH = '/content/drive/My Drive/server model/model.h5'
+MODEL_PATH = '/content/drive/My Drive/model/model.h5'
 
 # Color scheme for different food categories
 DETECTION_COLORS = {
