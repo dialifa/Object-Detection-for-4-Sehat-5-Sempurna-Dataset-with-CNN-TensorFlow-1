@@ -52,6 +52,22 @@ Please describe your Startup Campus final project here. You may should your <b>m
 Describe your dataset information here. Provide a screenshot for some of your dataset samples (for example, if you're using CIFAR10 dataset, then show an image for each class).
 - Link: [Dataset 4 Sehat 5 Sempurna](https://www.kaggle.com/datasets/andromedagroup05/data-4-sehat-5-sempurna)
 
+Karbohidrat
+<img src="https://github.com/FAISALAKBARr/Object-Detection-for-Balanced-Meal-Evaluation-According-to-4-Sehat-5-Sempurna/blob/main/demo%20test/karbohidrat/Image(9).jpg" width="200" height="200">
+
+Protein
+<img src="https://github.com/FAISALAKBARr/Object-Detection-for-Balanced-Meal-Evaluation-According-to-4-Sehat-5-Sempurna/blob/main/demo%20test/protein/Image(7).jpg" width="200" height="200">
+
+Sayur
+<img src="https://github.com/FAISALAKBARr/Object-Detection-for-Balanced-Meal-Evaluation-According-to-4-Sehat-5-Sempurna/blob/main/demo%20test/sayur/Image(4).jpeg" width="200" height="200">
+
+Buah
+<img src="https://github.com/FAISALAKBARr/Object-Detection-for-Balanced-Meal-Evaluation-According-to-4-Sehat-5-Sempurna/blob/main/demo%20test/buah/Image%20(2).jpg" width="200" height="200">
+
+Minuman
+<img src="https://github.com/FAISALAKBARr/Object-Detection-for-Balanced-Meal-Evaluation-According-to-4-Sehat-5-Sempurna/blob/main/demo%20test/minuman/Images(8).jpeg" width="200" height="200">
+
+
 ## Results
 ### Model Performance
 Describe all results found in your final project experiments, including hyperparameters tuning and architecture modification performances. Put it into table format. Please show pictures (of model accuracy, loss, etc.) for more clarity.
@@ -100,7 +116,7 @@ Describe and show how you deploy this project (e.g., using Streamlit ), if any.
 
 ## Supporting Documents
 ### Presentation Deck
-- Link: https://...
+- Link: [Andromeda Group's Presentation Deck](https://www.canva.com/design/DAGXshmx8wM/N9qiiPDu5uBXeROG2RjyGQ/edit?utm_content=DAGXshmx8wM&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 
 ### Business Model Canvas
 Provide a screenshot of your Business Model Canvas (BMC). Give some explanations, if necessary.
@@ -111,6 +127,8 @@ Provide a link to your short video, that should includes the project background 
 
 ## References
 Provide all links that support this final project, i.e., papers, GitHub repositories, websites, etc.
+- Link: [Padang Food Dataset](https://www.kaggle.com/datasets/faldoae/padangfood)
+- Link: [Hewan Ternak Dataset](https://www.kaggle.com/datasets/zulfafebriana/dataset-hewan-ternak)
 - Link: https://...
 - Link: https://...
 - Link: https://...
