@@ -139,8 +139,7 @@ def load_detection_model():
 def list_available_cameras(max_cameras=10):
     available_cameras = []
     for i in range(max_cameras):
-        # cap = cv2.VideoCapture(i, cv2.CAP_DSHOW)  # Backend DirectShow
-        cap = cv2.VideoCapture(i)
+        cap = cv2.VideoCapture(i, cv2.CAP_DSHOW)  # Backend DirectShow
         if cap.isOpened():
             available_cameras.append(i)
             cap.release()
@@ -413,28 +412,26 @@ elif selected == "Live Camera":
                 if not camera.isOpened():
                     st.error(f"Failed to open camera {camera_index}.")
                 else:
-                    try:
-                            while run:
-                                ret, frame = camera.read()
-                                if not ret:
-                                    st.error(f"Failed to read from camera {camera_index}.")
-                                    break
+                    while run:
+                        ret, frame = camera.read()
+                        if not ret:
+                            st.error(f"Failed to read from camera {camera_index}.")
+                            break
 
-                                # Detect objects
-                                detections = detect_objects(frame, model, threshold=confidence_threshold)
-                    
-                                # Draw detection boxes
-                                frame_with_detections = draw_detection_boxes(frame, detections)
-                    
-                                # Convert BGR to RGB for display
-                                frame_rgb = cv2.cvtColor(frame_with_detections, cv2.COLOR_BGR2RGB)
-                                FRAME_WINDOW.image(frame_rgb, channels="RGB")
-                    
-                                # Add small delay to reduce CPU usage
-                                time.sleep(0.1)
-                    finally:
-                        camera.release()
-                        cv2.destroyAllWindows()
+                        # Detect objects
+                        detections = detect_objects(frame, model)
+            
+                        # Draw detection boxes
+                        frame_with_detections = draw_detection_boxes(frame, detections)
+            
+                        # Convert BGR to RGB for display
+                        frame_rgb = cv2.cvtColor(frame_with_detections, cv2.COLOR_BGR2RGB)
+                        FRAME_WINDOW.image(frame_rgb)
+            
+                        # Add small delay to reduce CPU usage
+                        time.sleep(0.1)
+            
+                    camera.release()
 
 
 # import streamlit as st
