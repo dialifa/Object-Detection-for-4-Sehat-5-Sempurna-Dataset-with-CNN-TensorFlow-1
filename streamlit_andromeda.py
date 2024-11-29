@@ -318,56 +318,15 @@ if selected == "Home":
         # Membuka tautan di tab baru menggunakan HTML
         st.markdown(
             f'<a href="{kaggle_url}" target="_blank" style="text-decoration:none;">'
-            '<button style="background-color:#4CAF50; color:white; padding:10px 20px; border:none; cursor:pointer;">'
+            '<button style="background-color:#51baff; color:white; padding:10px 20px; border:none; cursor:pointer;">'
             'Kunjungi Dataset di Kaggle</button></a>',
             unsafe_allow_html=True
         )
 
-
-# if selected == "Home":
-#     st.title("Andromeda")
-#     st.header("Automated Nutritional Analysis: Object Detection for Balanced Meal Evaluation According to 4 Sehat 5 Sempurna")
-#     st.write("Final project untuk program Startup Campus pada track Artificial Intelligence")
-#     st.write("Welcome to our Andromeda system! This system helps you analyze food items according to the Indonesian healthy eating guide '4 Sehat 5 Sempurna'")
-    
-#     # Add more detailed information about the system
-#     st.markdown("""
-    
-#     ### Tentang Aplikasi
-#     Program ini bertujuan untuk mengembangkan aplikasi Automated Nutritional Analysis: Object Detection for Balanced Meal Evaluation According to 4 Sehat 5 Sempurna. 
-#                 Aplikasi ini menggunakan model deteksi objek berbasis Convolutional Neural Networks (CNN) untuk menganalisis komposisi makanan dan mengevaluasi keseimbangan gizi berdasarkan prinsip 4 Sehat 5 Sempurna.
-#                 Sistem projek ini dirancang untuk mendukung edukasi gizi masyarakat dengan teknologi berbasis AI.
-#     This system helps you analyze food items according to the Indonesian healthy eating guide "4 Sehat 5 Sempurna".
-                
-#     ### Fitur Utama
-#     - Deteksi dan klasifikasi makanan menggunakan CNN.
-#     - Evaluasi keseimbangan nutrisi secara otomatis.
-#     - Tampilan interaktif dengan anotasi visual objek makanan.
-#     - Dukungan data lokal untuk prinsip 4 Sehat 5 Sempurna.
-                
-#     ### Teknologi yang Digunakan
-#     1. TensorFlow/Keras
-#     2. OpenCV
-#     3. Dataset makanan dan minuman
-                
-#     ### Prinsip 4 Sehat 5 Sempurna
-#     \n🍚 Carbohydrates (Karbohidrat)
-#     \n🥩 Proteins (Protein)
-#     \n🥕 Vegetables (Sayur)
-#     \n🍎 Fruits (Buah)
-#     \n🥛 Beverages (Minuman)
-                
-#     ### Cara Penggunaan
-#     1. Upload gambar makanan dan minuman. (image upload)
-#     2. Deteksi dan klasifikasi makanan. (image upload)
-#     3. Evaluasi keseimbangan nutrisi. (image upload)
-#     4. Tampilan interaktif dengan anotasi visual objek makanan. (image upload)
-                
-#     """)
-
 #     if st.button("Access Dataset on Kaggle"):
 #         kaggle_url = "window.open('https://www.kaggle.com/datasets/andromedagroup05/data-4-sehat-5-sempurna/data')"  # Replace with your link
 #         st.components.v1.html(f"<script>{kaggle_url}</script>", height=0)
+
 
 # Upload Image page
 # elif selected == "Upload Image":
