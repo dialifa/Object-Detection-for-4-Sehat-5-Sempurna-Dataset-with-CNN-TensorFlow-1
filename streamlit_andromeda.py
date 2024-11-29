@@ -153,7 +153,7 @@ def list_available_cameras(max_cameras=10):
     return available_cameras
 
 # Global variables
-CLASS_NAMES = ["sayur", "buah", "protein", "karbohidrat", "minuman"]
+CLASS_NAMES = ["sayur", "buah", "minuman", "karbohidrat", "protein"]
 # CLASS_NAMES = ["karbohidrat", "protein", "buah", "sayur", "minuman"]
 # CONFIDENCE_THRESHOLD = 0.5
 
