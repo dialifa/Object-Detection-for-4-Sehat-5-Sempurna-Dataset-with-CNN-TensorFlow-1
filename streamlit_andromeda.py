@@ -299,10 +299,9 @@ if selected == "Home":
 
     if st.button("Access Dataset on Kaggle"):
         kaggle_url = "window.open('https://www.kaggle.com/datasets/andromedagroup05/data-4-sehat-5-sempurna/data')"
-        user_resoinse = st.warning("Mau liat dataset nya di Kaggle?")
+        user_resoinse = st.radio("Mau liat dataset nya di Kaggle?", ["Woke", "Gajadi"])
         response_col1, response_col2 = st.columns(2)
         with response_col1:
-            # st.button(f"[Woke]({kaggle_url})", unsafe_allow_html=True)
             if st.button("Woke"): 
                 st.write("Mengarahkan ke Kaggle...")
                 st.components.v1.html(f"<script>{kaggle_url}</script>", height=0)
