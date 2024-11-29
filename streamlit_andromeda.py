@@ -318,8 +318,8 @@ if selected == "Home":
         # Membuka tautan di tab baru menggunakan HTML
         st.markdown(
             f'<a href="{kaggle_url}" target="_blank" style="text-decoration:none;">'
-            '<button style="background-color:white; color:#51baff; padding:10px 20px; border:none; cursor:pointer;">'
-            'Kunjungi Dataset di Kaggle</button></a>',
+            '<button style="background-color:#51baff; color:white; padding:10px 20px; border:none; cursor:pointer;">'
+            '**Kunjungi Dataset di Kaggle**</button></a>',
             unsafe_allow_html=True
         )
 
