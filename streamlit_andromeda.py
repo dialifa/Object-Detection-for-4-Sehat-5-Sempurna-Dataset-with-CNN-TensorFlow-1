@@ -271,60 +271,37 @@ def detect_objects(image, model, threshold=0.5):
 if selected == "Home":
     st.title("Andromeda")
     st.header("Automated Nutritional Analysis: Object Detection for Balanced Meal Evaluation According to 4 Sehat 5 Sempurna")
+    st.write("Final project untuk program Startup Campus pada track Artificial Intelligence.")
+    st.write("Welcome to our Andromeda system! This system helps you analyze food items according to the Indonesian healthy eating guide '4 Sehat 5 Sempurna'.")
     
     # Add more detailed information about the system
     st.markdown("""
-    ### About the System
-    This system helps you analyze food items according to the Indonesian healthy eating guide "4 Sehat 5 Sempurna".
     
+    ### About the System
+    Program ini bertujuan untuk mengembangkan aplikasi Automated Nutritional Analysis: Object Detection for Balanced Meal Evaluation According to 4 Sehat 5 Sempurna. 
+                Aplikasi ini menggunakan model deteksi objek berbasis Convolutional Neural Networks (CNN) untuk menganalisis komposisi makanan dan mengevaluasi keseimbangan gizi berdasarkan prinsip 4 Sehat 5 Sempurna.
+                Sistem projek ini dirancang untuk mendukung edukasi gizi masyarakat dengan teknologi berbasis AI.
+    This system helps you analyze food items according to the Indonesian healthy eating guide "4 Sehat 5 Sempurna".
+                
+    ### Fitur Utama
+    - Deteksi dan klasifikasi makanan menggunakan CNN.
+    - Evaluasi keseimbangan nutrisi secara otomatis.
+    - Tampilan interaktif dengan anotasi visual objek makanan.
+    - Dukungan data lokal untuk prinsip 4 Sehat 5 Sempurna.
+                
     The system can detect:
     - 🍚 Carbohydrates (Karbohidrat)
     - 🥩 Proteins (Protein)
     - 🥕 Vegetables (Sayur)
     - 🍎 Fruits (Buah)
     - 🥛 Beverages (Minuman)
-    """)
-
-    st.markdown("""
-    ### About the System
-    This system helps you analyze food items according to the Indonesian healthy eating guide "4 Sehat 5 Sempurna".
     
-    The system can detect:
-    - 🍚 Carbohydrates (Karbohidrat)
-    - 🥩 Proteins (Protein)
-    - 🥕 Vegetables (Sayur)
-    - 🍎 Fruits (Buah)
-    - 🥛 Beverages (Minuman)
+    ### Teknologi yang Digunakan
+    1. TensorFlow/Keras
+    2. OpenCV
+    3. Dataset makanan dan minuman
+    
     """)
-
-
-    # if st.button("Access Dataset on Kaggle"):
-    #     st.write("Mau lihat dataset di Kaggle?")
-        
-    #     # Kolom untuk tombol konfirmasi dan batal
-    #     response_col1, response_col2 = st.columns(2)
-        
-    #     with response_col1:
-    #         if st.button("Woke"):  # Tombol konfirmasi
-    #             st.write("Mengarahkan ke Kaggle...")
-    #             # kaggle_url = "https://www.kaggle.com/datasets/andromedagroup05/data-4-sehat-5-sempurna/data"
-    #             js = f"window.open('https://www.kaggle.com/datasets/andromedagroup05/data-4-sehat-5-sempurna/data')"
-    #             st.components.v1.html(f"<script>{js}</script>", height=0)
-        
-    #     with response_col2:
-    #         if st.button("Gajadi"):  # Tombol batal
-    #             st.write("Pengalihan dibatalkan.")
-
-    # Button to access Kaggle dataset
-    # if st.button("Access Dataset on Kaggle"):
-    #     kaggle_url = "window.open('https://www.kaggle.com/datasets/andromedagroup05/data-4-sehat-5-sempurna/data')" 
-    #     # Confirmation dialog
-    #     user_response = st.radio("Mau lihat dataset di Kaggle", ["Woke", "Gajadi"])
-    #     if user_response == "Woke":
-    #         st.success("Mengarahkan ke Kaggle...")
-    #         st.components.v1.html(f"<script>{kaggle_url}</script>", height=0)
-    #     elif user_response == "Gajadi":
-    #         st.write("Pengalihan dibatalkan.")
 
     if st.button("Access Dataset on Kaggle"):
         kaggle_url = "window.open('https://www.kaggle.com/datasets/andromedagroup05/data-4-sehat-5-sempurna/data')"  # Replace with your link
