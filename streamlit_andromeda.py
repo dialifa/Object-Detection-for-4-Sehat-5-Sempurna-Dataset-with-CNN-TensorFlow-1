@@ -295,11 +295,18 @@ if selected == "Home":
     3. Dataset makanan dan minuman
                 
     ### Prinsip 4 Sehat 5 Sempurna
-    🍚 Carbohydrates (Karbohidrat)
-    🥩 Proteins (Protein)
-    🥕 Vegetables (Sayur)
-    🍎 Fruits (Buah)
-    🥛 Beverages (Minuman)
+    \n🍚 Carbohydrates (Karbohidrat)
+    \n🥩 Proteins (Protein)
+    \n🥕 Vegetables (Sayur)
+    \n🍎 Fruits (Buah)
+    \n🥛 Beverages (Minuman)
+                
+    ### Cara Penggunaan
+    1. Upload gambar makanan dan minuman. (image upload)
+    2. Deteksi dan klasifikasi makanan. (image upload)
+    3. Evaluasi keseimbangan nutrisi. (image upload)
+    4. Tampilan interaktif dengan anotasi visual objek makanan. (image upload)
+                
     """)
 
     if st.button("Access Dataset on Kaggle"):
