@@ -307,8 +307,8 @@ if selected == "Home":
         with response_col1:
             if st.button("Woke"):  # Tombol konfirmasi
                 st.write("Mengarahkan ke Kaggle...")
-                kaggle_url = "https://www.kaggle.com/datasets/andromedagroup05/data-4-sehat-5-sempurna/data"
-                js = f"window.open('{kaggle_url}')"
+                # kaggle_url = "https://www.kaggle.com/datasets/andromedagroup05/data-4-sehat-5-sempurna/data"
+                js = f"window.open('https://www.kaggle.com/datasets/andromedagroup05/data-4-sehat-5-sempurna/data')"
                 st.components.v1.html(f"<script>{js}</script>", height=0)
         
         with response_col2:
