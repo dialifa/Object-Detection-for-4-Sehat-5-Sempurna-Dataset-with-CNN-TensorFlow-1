@@ -318,9 +318,9 @@ if selected == "Home":
         user_response = st.radio("Apakah ingin mengunjungi Kaggle?", ["Oke", "Tidak"])
         if user_response == "Oke":
             st.success("Mengarahkan ke Kaggle...")
-            st.markdown(f"[Klik di sini untuk mengunjungi dataset Kaggle]({kaggle_url})", unsafe_allow_html=True)
+            st.components.v1.html(f"<script>{kaggle_url}</script>", height=0)
         elif user_response == "Tidak":
-            st.info("Pengalihan dibatalkan.")
+            st.write("Pengalihan dibatalkan.")
 
 # Upload Image page
 # elif selected == "Upload Image":
