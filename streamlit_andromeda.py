@@ -298,29 +298,29 @@ if selected == "Home":
     """)
 
     kaggle_url = "https://www.kaggle.com/datasets/andromedagroup05/data-4-sehat-5-sempurna/data"  # Ganti dengan URL dataset Kaggle
-    if st.button("Access Dataset on Kaggle"):
-        user_resoinse = st.warning("Apakah ingin melihat Dataset pada Kaggle?")
-        response_col1, response_col2 = st.columns(2)
-        with response_col1:
-            # st.button(f"[Woke]({kaggle_url})", unsafe_allow_html=True)
-            if st.button("Woke"):
-                st.write("Mengarahkan ke Kaggle...")
-                st.markdown(f"[Klik di sini untuk mengunjungi dataset Kaggle]({kaggle_url})", unsafe_allow_html=True)
-            
-        with response_col2:
-            if st.button("Gajadi"):
-                st.write("Mengarahkan ke Home...")
-                st.markdown(f"Pengalihan dibatalkan.")
-
-    # # Button to access Kaggle dataset
     # if st.button("Access Dataset on Kaggle"):
-    #     # Confirmation dialog
-    #     user_response = st.radio("Apakah ingin mengunjungi Kaggle?", ["Oke", "Gajadi"])
-    #     if user_response == "Oke":
-    #         st.success("Mengarahkan ke Kaggle...")
-    #         st.markdown(f"[Klik di sini untuk mengunjungi dataset Kaggle]({kaggle_url})", unsafe_allow_html=True)
-    #     elif user_response == "Gajadi":
-    #         st.info("Pengalihan dibatalkan.")
+    #     user_resoinse = st.warning("Apakah ingin melihat Dataset pada Kaggle?")
+    #     response_col1, response_col2 = st.columns(2)
+    #     with response_col1:
+    #         # st.button(f"[Woke]({kaggle_url})", unsafe_allow_html=True)
+    #         if st.button("Woke"):
+    #             st.write("Mengarahkan ke Kaggle...")
+    #             st.markdown(f"[Klik di sini untuk mengunjungi dataset Kaggle]({kaggle_url})", unsafe_allow_html=True)
+            
+    #     with response_col2:
+    #         if st.button("Gajadi"):
+    #             st.write("Mengarahkan ke Home...")
+    #             st.markdown(f"Pengalihan dibatalkan.")
+
+    # Button to access Kaggle dataset
+    if st.button("Access Dataset on Kaggle"):
+        # Confirmation dialog
+        user_response = st.radio("Apakah ingin mengunjungi Kaggle?", ["Oke", "Tidak"])
+        if user_response == "Oke":
+            st.success("Mengarahkan ke Kaggle...")
+            st.markdown(f"[Klik di sini untuk mengunjungi dataset Kaggle]({kaggle_url})", unsafe_allow_html=True)
+        elif user_response == "Tidak":
+            st.info("Pengalihan dibatalkan.")
 
 # Upload Image page
 # elif selected == "Upload Image":
