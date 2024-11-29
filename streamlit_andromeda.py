@@ -298,35 +298,35 @@ if selected == "Home":
     """)
 
 
-    if st.button("Access Dataset on Kaggle"):
-        st.write("Mau lihat dataset di Kaggle?")
-        
-        # Kolom untuk tombol konfirmasi dan batal
-        response_col1, response_col2 = st.columns(2)
-        
-        with response_col1:
-            if st.button("Woke"):  # Tombol konfirmasi
-                st.write("Mengarahkan ke Kaggle...")
-                # kaggle_url = "https://www.kaggle.com/datasets/andromedagroup05/data-4-sehat-5-sempurna/data"
-                js = f"window.open('https://www.kaggle.com/datasets/andromedagroup05/data-4-sehat-5-sempurna/data')"
-                st.components.v1.html(f"<script>{js}</script>", height=0)
-        
-        with response_col2:
-            if st.button("Gajadi"):  # Tombol batal
-                st.write("Pengalihan dibatalkan.")
-
-    # # Button to access Kaggle dataset
     # if st.button("Access Dataset on Kaggle"):
-    #     kaggle_url = "window.open('https://www.kaggle.com/datasets/andromedagroup05/data-4-sehat-5-sempurna/data')" 
-    #     # Confirmation dialog
-    #     user_response = st.radio("Apakah ingin mengunjungi Kaggle?", ["Oke", "Tidak"])
-    #     if user_response == "Oke":
-    #         st.success("Mengarahkan ke Kaggle...")
-    #         st.components.v1.html(f"<script>{kaggle_url}</script>", height=0)
-    #     elif user_response == "Tidak":
-    #         st.write("Pengalihan dibatalkan.")
+    #     st.write("Mau lihat dataset di Kaggle?")
+        
+    #     # Kolom untuk tombol konfirmasi dan batal
+    #     response_col1, response_col2 = st.columns(2)
+        
+    #     with response_col1:
+    #         if st.button("Woke"):  # Tombol konfirmasi
+    #             st.write("Mengarahkan ke Kaggle...")
+    #             # kaggle_url = "https://www.kaggle.com/datasets/andromedagroup05/data-4-sehat-5-sempurna/data"
+    #             js = f"window.open('https://www.kaggle.com/datasets/andromedagroup05/data-4-sehat-5-sempurna/data')"
+    #             st.components.v1.html(f"<script>{js}</script>", height=0)
+        
+    #     with response_col2:
+    #         if st.button("Gajadi"):  # Tombol batal
+    #             st.write("Pengalihan dibatalkan.")
 
-    # if st.button("Learn More"):
+    # Button to access Kaggle dataset
+    if st.button("Access Dataset on Kaggle"):
+        kaggle_url = "window.open('https://www.kaggle.com/datasets/andromedagroup05/data-4-sehat-5-sempurna/data')" 
+        # Confirmation dialog
+        user_response = st.radio("Mau lihat dataset di Kaggle", ["Woke", "Gajadi"])
+        if user_response == "Woke":
+            st.success("Mengarahkan ke Kaggle...")
+            st.components.v1.html(f"<script>{kaggle_url}</script>", height=0)
+        elif user_response == "Gajadi":
+            st.write("Pengalihan dibatalkan.")
+
+    # if st.button(""Access Dataset on Kaggle"):
     #     js = "window.open('https://www.kaggle.com/datasets/andromedagroup05/data-4-sehat-5-sempurna/data')"  # Replace with your link
     #     st.components.v1.html(f"<script>{js}</script>", height=0)
 
