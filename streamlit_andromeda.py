@@ -297,7 +297,6 @@ if selected == "Home":
     - 🥛 Beverages (Minuman)
     """)
 
-    kaggle_url = "https://www.kaggle.com/datasets/andromedagroup05/data-4-sehat-5-sempurna/data"  # Ganti dengan URL dataset Kaggle
     # if st.button("Access Dataset on Kaggle"):
     #     user_resoinse = st.warning("Apakah ingin melihat Dataset pada Kaggle?")
     #     response_col1, response_col2 = st.columns(2)
@@ -314,6 +313,7 @@ if selected == "Home":
 
     # Button to access Kaggle dataset
     if st.button("Access Dataset on Kaggle"):
+        kaggle_url = "https://www.kaggle.com/datasets/andromedagroup05/data-4-sehat-5-sempurna/data" 
         # Confirmation dialog
         user_response = st.radio("Apakah ingin mengunjungi Kaggle?", ["Oke", "Tidak"])
         if user_response == "Oke":
