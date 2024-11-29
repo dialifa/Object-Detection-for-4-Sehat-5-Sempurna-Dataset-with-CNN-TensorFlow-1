@@ -285,10 +285,31 @@ if selected == "Home":
     - 🥛 Beverages (Minuman)
     """)
 
+    st.markdown("""
+    ### About the System
+    This system helps you analyze food items according to the Indonesian healthy eating guide "4 Sehat 5 Sempurna".
+    
+    The system can detect:
+    - 🍚 Carbohydrates (Karbohidrat)
+    - 🥩 Proteins (Protein)
+    - 🥕 Vegetables (Sayur)
+    - 🍎 Fruits (Buah)
+    - 🥛 Beverages (Minuman)
+    """)
+
     kaggle_url = "https://www.kaggle.com/datasets/andromedagroup05/data-4-sehat-5-sempurna/data"  # Ganti dengan URL dataset Kaggle
     if st.button("Access Dataset on Kaggle"):
-        st.write("Redirecting to Kaggle dataset...")
-        st.markdown(f"[Click here to visit the Kaggle dataset]({kaggle_url})", unsafe_allow_html=True)
+            user_resoinse = st.waring("Apakah ingin melihat Dataset pada Kaggle?")
+            response_col1, response_col2 = st.columns(2)
+            with response_col1:
+                if st.button("Woke"):
+                    st.write("Mengarahkan ke Kaggle...")
+                    st.markdown(f"[Klik di sini untuk mengunjungi dataset Kaggle]({kaggle_url})", unsafe_allow_html=True)
+                
+            with response_col2:
+                if st.button("Gajadi"):
+                    st.write("Mengarahkan ke Home...")
+                    st.markdown(f"Pengalihan dibatalkan.")
 
 # Upload Image page
 # elif selected == "Upload Image":
