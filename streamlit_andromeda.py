@@ -289,6 +289,11 @@ if selected == "Home":
     - Tampilan interaktif dengan anotasi visual objek makanan.
     - Dukungan data lokal untuk prinsip 4 Sehat 5 Sempurna.
                 
+    ### Teknologi yang Digunakan
+    1. TensorFlow/Keras
+    2. OpenCV
+    3. Dataset makanan dan minuman
+                
     The system can detect:
     - 🍚 Carbohydrates (Karbohidrat)
     - 🥩 Proteins (Protein)
@@ -296,10 +301,6 @@ if selected == "Home":
     - 🍎 Fruits (Buah)
     - 🥛 Beverages (Minuman)
     
-    ### Teknologi yang Digunakan
-    1. TensorFlow/Keras
-    2. OpenCV
-    3. Dataset makanan dan minuman
     
     """)
 
