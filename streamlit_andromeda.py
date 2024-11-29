@@ -60,7 +60,7 @@ st.set_page_config(
 
 #     save_response_content(response, destination)
 
-MODEL_ID = '1ogRogs-V0Sq-yeQi0fHrw1SmnkCZv9Nu' 
+MODEL_ID = '1CGZ07dPU0famhdMHIUXIEo827q46_hy1' 
 MODEL_PATH = 'model.h5'
 
 # Color scheme for different food categories
@@ -125,7 +125,7 @@ def load_detection_model():
     try:
         # Unduh model jika belum ada
         if not os.path.exists(MODEL_PATH):
-            url = f'https://drive.google.com/uc?id=1ogRogs-V0Sq-yeQi0fHrw1SmnkCZv9Nu'
+            url = f'https://drive.google.com/uc?id=1CGZ07dPU0famhdMHIUXIEo827q46_hy1'
             st.info("Downloading model from Google Drive")
             gdown.download(url, MODEL_PATH, quiet=False)
 
@@ -529,7 +529,7 @@ elif selected == "Live Camera":
 #     try:
 #         # Unduh model jika belum ada
 #         if not os.path.exists(MODEL_PATH):
-#             url = f'https://drive.google.com/uc?id=1ogRogs-V0Sq-yeQi0fHrw1SmnkCZv9Nu'
+#             url = f'https://drive.google.com/uc?id=1CGZ07dPU0famhdMHIUXIEo827q46_hy1'
 #             st.info("Downloading model from Google Drive...")
 #             gdown.download(url, MODEL_PATH, quiet=False)
 
