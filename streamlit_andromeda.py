@@ -271,13 +271,13 @@ def detect_objects(image, model, threshold=0.5):
 if selected == "Home":
     st.title("Andromeda")
     st.header("Automated Nutritional Analysis: Object Detection for Balanced Meal Evaluation According to 4 Sehat 5 Sempurna")
-    st.write("Final project untuk program Startup Campus pada track Artificial Intelligence.")
-    st.write("Welcome to our Andromeda system! This system helps you analyze food items according to the Indonesian healthy eating guide '4 Sehat 5 Sempurna'.")
+    st.write("Final project untuk program Startup Campus pada track Artificial Intelligence")
+    st.write("Welcome to our Andromeda system! This system helps you analyze food items according to the Indonesian healthy eating guide '4 Sehat 5 Sempurna'")
     
     # Add more detailed information about the system
     st.markdown("""
     
-    ### About the System
+    ### Tentang Aplikasi
     Program ini bertujuan untuk mengembangkan aplikasi Automated Nutritional Analysis: Object Detection for Balanced Meal Evaluation According to 4 Sehat 5 Sempurna. 
                 Aplikasi ini menggunakan model deteksi objek berbasis Convolutional Neural Networks (CNN) untuk menganalisis komposisi makanan dan mengevaluasi keseimbangan gizi berdasarkan prinsip 4 Sehat 5 Sempurna.
                 Sistem projek ini dirancang untuk mendukung edukasi gizi masyarakat dengan teknologi berbasis AI.
@@ -294,14 +294,12 @@ if selected == "Home":
     2. OpenCV
     3. Dataset makanan dan minuman
                 
-    The system can detect:
+    ### Prinsip 4 Sehat 5 Sempurna
     - 🍚 Carbohydrates (Karbohidrat)
     - 🥩 Proteins (Protein)
     - 🥕 Vegetables (Sayur)
     - 🍎 Fruits (Buah)
     - 🥛 Beverages (Minuman)
-    
-    
     """)
 
     if st.button("Access Dataset on Kaggle"):
