@@ -297,19 +297,23 @@ if selected == "Home":
     - 🥛 Beverages (Minuman)
     """)
 
+
     if st.button("Access Dataset on Kaggle"):
-        kaggle_url = "window.open('https://www.kaggle.com/datasets/andromedagroup05/data-4-sehat-5-sempurna/data')"
-        user_resoinse = st.radio("Mau liat dataset nya di Kaggle?", ["Woke", "Gajadi"])
+        st.write("Mau lihat dataset di Kaggle?")
+        
+        # Kolom untuk tombol konfirmasi dan batal
         response_col1, response_col2 = st.columns(2)
+        
         with response_col1:
-            if st.button("Woke"): 
+            if st.button("Woke"):  # Tombol konfirmasi
                 st.write("Mengarahkan ke Kaggle...")
-                st.components.v1.html(f"<script>{kaggle_url}</script>", height=0)
-            
+                kaggle_url = "https://www.kaggle.com/datasets/andromedagroup05/data-4-sehat-5-sempurna/data"
+                js = f"window.open('{kaggle_url}')"
+                st.components.v1.html(f"<script>{js}</script>", height=0)
+        
         with response_col2:
-            if st.button("Gajadi"):
-                st.write("Mengarahkan ke Home...")
-                st.markdown(f"Pengalihan dibatalkan.")
+            if st.button("Gajadi"):  # Tombol batal
+                st.write("Pengalihan dibatalkan.")
 
     # # Button to access Kaggle dataset
     # if st.button("Access Dataset on Kaggle"):
