@@ -316,19 +316,19 @@ if selected == "Home":
     #             st.write("Pengalihan dibatalkan.")
 
     # Button to access Kaggle dataset
-    if st.button("Access Dataset on Kaggle"):
-        kaggle_url = "window.open('https://www.kaggle.com/datasets/andromedagroup05/data-4-sehat-5-sempurna/data')" 
-        # Confirmation dialog
-        user_response = st.selectbox("Mau lihat dataset di Kaggle", ["Woke", "Gajadi"])
-        if user_response == "Woke":
-            st.success("Mengarahkan ke Kaggle...")
-            st.components.v1.html(f"<script>{kaggle_url}</script>", height=0)
-        elif user_response == "Gajadi":
-            st.write("Pengalihan dibatalkan.")
+    # if st.button("Access Dataset on Kaggle"):
+    #     kaggle_url = "window.open('https://www.kaggle.com/datasets/andromedagroup05/data-4-sehat-5-sempurna/data')" 
+    #     # Confirmation dialog
+    #     user_response = st.radio("Mau lihat dataset di Kaggle", ["Woke", "Gajadi"])
+    #     if user_response == "Woke":
+    #         st.success("Mengarahkan ke Kaggle...")
+    #         st.components.v1.html(f"<script>{kaggle_url}</script>", height=0)
+    #     elif user_response == "Gajadi":
+    #         st.write("Pengalihan dibatalkan.")
 
-    # if st.button(""Access Dataset on Kaggle"):
-    #     js = "window.open('https://www.kaggle.com/datasets/andromedagroup05/data-4-sehat-5-sempurna/data')"  # Replace with your link
-    #     st.components.v1.html(f"<script>{js}</script>", height=0)
+    if st.button("Access Dataset on Kaggle"):
+        kaggle_url = "window.open('https://www.kaggle.com/datasets/andromedagroup05/data-4-sehat-5-sempurna/data')"  # Replace with your link
+        st.components.v1.html(f"<script>{kaggle_url}</script>", height=0)
 
 # Upload Image page
 # elif selected == "Upload Image":
