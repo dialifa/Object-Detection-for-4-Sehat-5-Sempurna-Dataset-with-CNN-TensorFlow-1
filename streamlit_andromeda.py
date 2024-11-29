@@ -285,6 +285,11 @@ if selected == "Home":
     - 🥛 Beverages (Minuman)
     """)
 
+    kaggle_url = "https://www.kaggle.com/datasets/andromedagroup05/data-4-sehat-5-sempurna/data"  # Ganti dengan URL dataset Kaggle
+    if st.button("Access Dataset on Kaggle"):
+        st.write("Redirecting to Kaggle dataset...")
+        st.markdown(f"[Click here to visit the Kaggle dataset]({kaggle_url})", unsafe_allow_html=True)
+
 # Upload Image page
 # elif selected == "Upload Image":
 #     st.title("Food Image Detection")
