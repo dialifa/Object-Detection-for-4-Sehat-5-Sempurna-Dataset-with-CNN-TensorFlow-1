@@ -295,11 +295,11 @@ if selected == "Home":
     3. Dataset makanan dan minuman
                 
     ### Prinsip 4 Sehat 5 Sempurna
-    - 🍚 Carbohydrates (Karbohidrat)
-    - 🥩 Proteins (Protein)
-    - 🥕 Vegetables (Sayur)
-    - 🍎 Fruits (Buah)
-    - 🥛 Beverages (Minuman)
+    🍚 Carbohydrates (Karbohidrat)
+    🥩 Proteins (Protein)
+    🥕 Vegetables (Sayur)
+    🍎 Fruits (Buah)
+    🥛 Beverages (Minuman)
     """)
 
     if st.button("Access Dataset on Kaggle"):
