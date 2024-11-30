@@ -75,7 +75,7 @@ Buah
 Minuman
 
 
-<img src="https://github.com/FAISALAKBARr/Object-Detection-for-Balanced-Meal-Evaluation-According-to-4-Sehat-5-Sempurna/blob/main/demo%20test/minuman/Images(8).jpeg" width="200" height="200">
+<img src="https://github.com/FAISALAKBARr/Object-Detection-for-Balanced-Meal-Evaluation-According-to-4-Sehat-5-Sempurna/blob/main/demo%20test/minuman/Images(8).jpg" width="200" height="200">
 
 
 ## Results
@@ -140,7 +140,7 @@ Provide all links that support this final project, i.e., papers, GitHub reposito
 - Link: [Padang Food Dataset](https://www.kaggle.com/datasets/faldoae/padangfood)
 - Link: [Hewan Ternak Dataset](https://www.kaggle.com/datasets/zulfafebriana/dataset-hewan-ternak)
 - Link: [Indonesian Food Dataset](https://www.kaggle.com/datasets/rizkyyk/dataset-food-classification)
-- Link: https://...
+- Link: [Nutrilog Dataset](https://www.kaggle.com/datasets/israkf/nutrilog-dataset)
 - Link: https://...
 
 ## Additional Comments
