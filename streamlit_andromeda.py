@@ -297,7 +297,7 @@ if selected == "Home":
     ### Teknologi yang Digunakan
     1. **TensorFlow/Keras** untuk model CNN.
     2. **OpenCV** untuk pemrosesan gambar.
-    3. Dataset lokal untuk makanan dan minuman.
+    3. Dataset untuk makanan dan minuman yang dihubungkan dengan Drive.
 
     ### Prinsip 4 Sehat 5 Sempurna
     - 🍚 **Carbohydrates (Karbohidrat)**

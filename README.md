@@ -8,7 +8,7 @@ Final project untuk program Startup Campus pada track Artificial Intelligence. P
 - Deteksi dan klasifikasi makanan menggunakan CNN.
 - Tampilan interaktif dengan anotasi visual objek makanan.
 - Evaluasi keseimbangan nutrisi secara otomatis.
-- Dukungan data lokal untuk prinsip 4 Sehat 5 Sempurna.
+- Dukungan dataset untuk prinsip 4 Sehat 5 Sempurna.
   
 ## Teknologi yang Digunakan:
 - Python
