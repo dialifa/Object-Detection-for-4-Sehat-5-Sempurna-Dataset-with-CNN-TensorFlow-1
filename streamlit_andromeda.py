@@ -154,9 +154,9 @@ def list_available_cameras(max_cameras=10):
 
 # Global variables
 # CLASS_NAMES = ["sayur", "buah", "minuman", "karbohidrat", "protein"]
-# CLASS_NAMES = ["buah", "karbohidrat", "minuman", "protein", "sayur"]
+CLASS_NAMES = ["buah", "karbohidrat", "minuman", "protein", "sayur"]
 
-CLASS_NAMES = ["karbohidrat", "protein", "buah", "sayur", "minuman"]
+# CLASS_NAMES = ["karbohidrat", "protein", "buah", "sayur", "minuman"]
 # CONFIDENCE_THRESHOLD = 0.5
 
 def preprocess_frame(frame, target_size=(224, 224)):
