@@ -155,9 +155,8 @@ def list_available_cameras(max_cameras=10):
     return available_cameras
 
 # Global variables
-# CLASS_NAMES = ["sayur", "buah", "minuman", "karbohidrat", "protein"]
-CLASS_NAMES = ["karbohidrat", "buah", "protein", "sayur", "minuman"]
-# CLASS_NAMES = ["buah", "karbohidrat", "minuman", "protein", "sayur"] #index di kaggle 
+# CLASS_NAMES = ["karbohidrat", "buah", "protein", "sayur", "minuman"]
+CLASS_NAMES = ["buah", "karbohidrat", "minuman", "protein", "sayur"] #index di kaggle 
 # CLASS_NAMES = ['sayur', 'protein', 'minuman', 'karbohidrat', 'buah'] #index di google drive
 
 # CLASS_NAMES = ["karbohidrat", "protein", "buah", "sayur", "minuman"]
