@@ -329,49 +329,6 @@ if selected == "Home":
             unsafe_allow_html=True
         )
 
-#     if st.button("Access Dataset on Kaggle"):
-#         kaggle_url = "window.open('https://www.kaggle.com/datasets/andromedagroup05/data-4-sehat-5-sempurna/data')"  # Replace with your link
-#         st.components.v1.html(f"<script>{kaggle_url}</script>", height=0)
-
-
-# Upload Image page
-# elif selected == "Upload Image":
-#     st.title("Food Image Detection")
-    
-#     model = load_detection_model()
-#     if model is None:
-#         st.error("Failed to load model. Please check the model file.")
-#     else:
-#         uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
-        
-#         if uploaded_file is not None:
-#             # Load and display original image
-#             image = Image.open(uploaded_file)
-#             image_np = np.array(image)
-#             image_cv = cv2.cvtColor(image_np, cv2.COLOR_RGB2BGR)
-            
-#             col1, col2 = st.columns(2)
-#             with col1:
-#                 st.image(image, caption="Original Image", use_column_width=True)
-            
-#             # Process image
-#             if st.button("Detect Food Items"):
-#                 with st.spinner("Processing..."):
-#                     # Detect objects
-#                     detections = detect_objects(image_cv, model)
-                    
-#                     # Draw detection boxes
-#                     result_image = draw_detection_boxes(image_cv, detections)
-#                     result_image = cv2.cvtColor(result_image, cv2.COLOR_BGR2RGB)
-                    
-#                     # Display results
-#                     with col2:
-#                         st.image(result_image, caption="Detection Result", use_column_width=True)
-                    
-#                     # Display detection details
-#                     st.subheader("Detection Details:")
-#                     for det in detections:
-#                         st.write(f"- Found {det['class']} with {det['confidence']:.2f} confidence")
 
 elif selected == "Upload Image":
     st.title("Food Image Detection")
