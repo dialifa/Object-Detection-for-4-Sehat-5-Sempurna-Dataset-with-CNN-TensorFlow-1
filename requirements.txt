@@ -2,7 +2,7 @@ streamlit
 tensorflow
 opencv-python-headless
 numpy
-opencv-python
+# opencv-python
 Pillow
 gdown
 tqdm
