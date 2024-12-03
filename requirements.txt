@@ -1,12 +1,10 @@
 streamlit
+streamlit-option-menu
 tensorflow
 opencv-python-headless
 numpy
-# opencv-python
-Pillow
+pillow
 gdown
-tqdm
-streamlit-option-menu
-streamlit-webrtc
 requests
-
+streamlit-webrtc
+tensorflow-io-gcs-filesystem
