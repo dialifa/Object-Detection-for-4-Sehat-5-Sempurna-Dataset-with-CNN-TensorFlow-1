@@ -1,323 +1,692 @@
-import os
-import tensorflow as tf
-import numpy as np
 import streamlit as st
 from streamlit_option_menu import option_menu
+import tensorflow as tf
 import cv2
+import numpy as np
+from tensorflow.keras.models import load_model
 from PIL import Image
-import gdown
-from tqdm import tqdm
-import io
 import time
-from streamlit_webrtc import webrtc_streamer, VideoTransformerBase, RTCConfiguration, WebRtcMode
+import gdown  # Import gdown untuk mengunduh dari Google Drive
+import os
+import requests
+from tqdm import tqdm
 
-# Set page configuration
+# Page configuration
 st.set_page_config(
-    page_title="Sistem Deteksi Makanan dan Minuman",
+    page_title="Andromeda - Food Detection",
     page_icon="🍽️",
     layout="wide"
 )
 
+# def download_file_from_google_drive(file_id, destination):
+#     def get_confirm_token(response):
+#         for key, value in response.cookies.items():
+#             if key.startswith('download_warning'):
+#                 return value
+#         return None
+
+#     def save_response_content(response, destination):
+#         CHUNK_SIZE = 32768
+#         total_size = int(response.headers.get('content-length', 0))
+        
+#         # Create progress bar
+#         progress_bar = st.progress(0)
+#         progress_text = st.empty()
+        
+#         with open(destination, "wb") as f:
+#             downloaded = 0
+#             for chunk in response.iter_content(CHUNK_SIZE):
+#                 if chunk:
+#                     f.write(chunk)
+#                     downloaded += len(chunk)
+#                     # Update progress bar
+#                     if total_size:
+#                         progress = (downloaded / total_size)
+#                         progress_bar.progress(progress)
+#                         progress_text.text(f"Downloaded: {downloaded}/{total_size} bytes ({progress:.1%})")
+        
+#         progress_bar.empty()
+#         progress_text.empty()
+
+#     url = f"https://drive.google.com/uc?id={file_id}"
+#     session = requests.Session()
+
+#     response = session.get(url, stream=True)
+#     token = get_confirm_token(response)
+
+#     if token:
+#         params = {'confirm': token}
+#         response = session.get(url, params=params, stream=True)
+
+#     save_response_content(response, destination)
+
+# MODEL_ID = '1CGZ07dPU0famhdMHIUXIEo827q46_hy1' 
+# MODEL_PATH = 'model.h5'
 MODEL_ID = '1bGaEkxacdFkOLkZNzl32-y-ZMbJvtKT1' 
 MODEL_PATH = 'FINAL_MODEL.h5'
 
-# Custom CSS untuk styling
-st.markdown("""
-    <style>
-    .main {
-        padding: 20px;
-    }
-    .stButton>button {
-        width: 100%;
-        margin-top: 20px;
-        background-color: #4CAF50;
-        color: white;
-    }
-    .prediction-box {
-        padding: 20px;
-        border-radius: 5px;
-        margin: 10px 0;
-    }
-    .detection-box {
-        border: 2px solid #4CAF50;
-        padding: 10px;
-        margin: 10px 0;
-        border-radius: 5px;
-    }
-    </style>
-""", unsafe_allow_html=True)
-
-# Header aplikasi
-st.title("🍽️ Teknologi Cerdas untuk Konsumsi Bijak dan Berkelanjutan")
-st.write("Sistem ini dapat mengklasifikasikan makanan dan minuman melalui upload gambar atau secara real-time")
-
-# Define class names and descriptions
-class_names = ['buah', 'karbohidrat', 'minuman', 'protein', 'sayur']
-class_descriptions = {
-    'buah': """
-        🍎 Kategori Buah
-        - Sumber vitamin dan mineral alami
-        - Mengandung serat tinggi
-        - Baik untuk sistem pencernaan
-    """,
-    'karbohidrat': """
-        🍚 Kategori Karbohidrat
-        - Sumber energi utama tubuh
-        - Termasuk nasi, roti, dan umbi-umbian
-        - Penting untuk aktivitas sehari-hari
-    """,
-    'minuman': """
-        🥤 Kategori Minuman
-        - Membantu hidrasi tubuh
-        - Beragam jenis minuman sehat
-        - Penting untuk metabolisme
-    """,
-    'protein': """
-        🍖 Kategori Protein
-        - Penting untuk pertumbuhan
-        - Sumber protein hewani dan nabati
-        - Membantu pembentukan otot
-    """,
-    'sayur': """
-        🥬 Kategori Sayuran
-        - Kaya akan vitamin dan mineral
-        - Sumber serat yang baik
-        - Mendukung sistem imun
-    """
+# Color scheme for different food categories
+DETECTION_COLORS = {
+    "buah": (0, 0, 255),            # Red
+    "karbohidrat": (255, 255, 0),   # Cyan
+    "minuman": (255, 0, 0),         # Blue
+    "protein": (255, 0, 255),       # Magenta
+    "sayur": (0, 255, 0)            # Green
 }
 
-# Load model
+# Sidebar menu
+with st.sidebar:
+    selected = option_menu(
+        "Main Menu", 
+        ["Home", "Upload Image", "Live Camera"],
+        icons=["house", "upload", "camera"],
+        menu_icon="cast",
+        default_index=0
+
+    )
+    # Nambahin confidence threshold di sidebar
+    confidence_threshold = st.slider(
+        "Confidence Threshold", 
+        min_value=0.0, 
+        max_value=1.0, 
+        value=0.5, 
+        step=0.05
+
+    )
+
+# Cache the model loading
 @st.cache_resource
-def load_model():
-    try:
-        if not os.path.exists(MODEL_PATH):
-            st.info("Downloading model from Google Drive...")
-            url = f'https://drive.google.com/uc?id={MODEL_ID}'
-            gdown.download(url, MODEL_PATH, quiet=False)
+def load_detection_model():
+    # try:
+    #     # Buat folder model jika belum ada
+    #     os.makedirs('model', exist_ok=True)
         
-        model = tf.keras.models.load_model(MODEL_PATH)
+    #     # Download model jika belum ada
+    #     if not os.path.exists(MODEL_PATH):
+    #         st.info("Downloading model from Google Drive...")
+    #         try:
+    #             download_file_from_google_drive(MODEL_ID, MODEL_PATH)
+    #             st.success("Model downloaded successfully!")
+    #         except Exception as e:
+    #             st.error(f"Error downloading model: {str(e)}")
+    #             return None
+        
+    #     # Verifikasi file size
+    #     if os.path.getsize(MODEL_PATH) < 1000:  # Minimal size in bytes
+    #         st.error("Downloaded file seems corrupted. Retrying download...")
+    #         os.remove(MODEL_PATH)
+    #         return load_detection_model()
+        
+    #     # Load model
+    #     model = load_model(MODEL_PATH)
+    #     return model
+    # except Exception as e:
+    #     st.error(f"Error loading model: {str(e)}")
+    #     return None
+
+    try:
+        # Unduh model jika belum ada
+        if not os.path.exists(MODEL_PATH):
+            url = f'https://drive.google.com/uc?id=1bGaEkxacdFkOLkZNzl32-y-ZMbJvtKT1'
+            st.info("Downloading model from Google Drive")
+            gdown.download(url, MODEL_PATH, quiet=False)
+
+        model = load_model(MODEL_PATH)
         return model
     except Exception as e:
         st.error(f"Error loading model: {str(e)}")
         return None
 
-model = load_model()
+    # try:
+    #     model = load_model('./model/model.h5')
+    #     return model
+    # except Exception as e:
+    #     st.error(f"Error loading model: {str(e)}")
+    #     return None
 
-def preprocess_image(image, target_size=(224, 224)):
-    """
-    Preprocess image for model prediction
-    """
-    if isinstance(image, np.ndarray):
-        # Convert BGR to RGB if image is from OpenCV
-        if len(image.shape) == 3 and image.shape[2] == 3:
-            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        original = image.copy()
-        image = Image.fromarray(image)
-    else:
-        original = np.array(image)
-    
-    # Resize image
-    image = image.resize(target_size)
-    
-    # Convert to array and normalize
-    img_array = tf.keras.preprocessing.image.img_to_array(image)
-    img_array = img_array / 255.0
-    img_array = tf.expand_dims(img_array, 0)
-    
-    return img_array, original
+# Fungsi untuk mendeteksi kamera yang tersedia
+def list_available_cameras(max_cameras=10):
+    available_cameras = []
+    for i in range(max_cameras):
+        cap = cv2.VideoCapture(i)
+        if cap.isOpened():
+            available_cameras.append(i)
+            cap.release()
+    return available_cameras
 
-def predict_image(image):
-    """
-    Make prediction on preprocessed image and draw bounding box
-    """
-    try:
-        processed_image, original_image = preprocess_image(image)
-        predictions = model.predict(processed_image, verbose=0)
-        predicted_class_index = np.argmax(predictions[0])
-        confidence = float(predictions[0][predicted_class_index])
-        
-        # Get image dimensions
-        height, width = original_image.shape[:2]
+# Global variables
+# CLASS_NAMES = ["karbohidrat", "buah", "protein", "sayur", "minuman"]
+CLASS_NAMES = ["buah", "karbohidrat", "minuman", "protein", "sayur"] #index di kaggle 
+# CLASS_NAMES = ['sayur', 'protein', 'minuman', 'karbohidrat', 'buah'] #index di google drive
+
+# CLASS_NAMES = ["karbohidrat", "protein", "buah", "sayur", "minuman"]
+# CONFIDENCE_THRESHOLD = 0.5
+
+def preprocess_frame(frame, target_size=(224, 224)):
+    """Preprocess frame for model input"""
+    processed_frame = cv2.resize(frame, target_size)
+    processed_frame = processed_frame.astype("float32") / 255.0
+    processed_frame = np.expand_dims(processed_frame, axis=0)
+    return processed_frame
+
+def get_region_proposals(image):
+    """Get region proposals using contour detection"""
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    blur = cv2.GaussianBlur(gray, (5, 5), 0)
+    _, thresh = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    
+    regions = []
+    for contour in contours:
+        x, y, w, h = cv2.boundingRect(contour)
+        if w > 50 and h > 50:  # Minimum size threshold
+            regions.append((x, y, w, h))
+    return regions
+
+def draw_detection_boxes(image, detections):
+    """Draw detection boxes with labels and confidence scores"""
+    image_with_boxes = image.copy()
+    
+    for det in detections:
+        x, y, w, h = det['box']
+        class_name = det['class']
+        confidence = det['confidence']
+        color = DETECTION_COLORS.get(class_name, (0, 255, 0))
         
         # Draw bounding box
-        output_image = original_image.copy()
-        color = (0, 255, 0)  # Green color for box
-        thickness = 2
+        cv2.rectangle(image_with_boxes, (x, y), (x + w, y + h), color, 2)
         
-        # Draw box around detected object
-        start_point = (10, 10)
-        end_point = (width - 10, height - 10)
-        cv2.rectangle(output_image, start_point, end_point, color, thickness)
+        # Create label with class name and confidence
+        label = f"{class_name}: {confidence:.2f}"
         
-        # Add label with class name and confidence
-        label = f"{class_names[predicted_class_index]}: {confidence * 100:.2f}%"
-        label_position = (start_point[0], start_point[1] - 10)
-        cv2.putText(output_image, label, label_position, 
-                   cv2.FONT_HERSHEY_SIMPLEX, 0.6, color, 2)
+        # Get label size
+        (label_w, label_h), baseline = cv2.getTextSize(
+            label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 2)
         
-        return {
-            'class': class_names[predicted_class_index],
-            'confidence': confidence * 100,
-            'all_probabilities': {class_names[i]: float(predictions[0][i]) * 100 
-                                for i in range(len(class_names))},
-            'output_image': output_image
-        }
-    except Exception as e:
-        st.error(f"Error during prediction: {str(e)}")
-        return None
-
-class VideoTransformer(VideoTransformerBase):
-    def __init__(self):
-        self.model = load_model()
-        self.last_prediction_time = time.time()
-        self.prediction_interval = 1.0  # Predict every 1 second
-        self.current_prediction = None
-
-    def transform(self, frame):
-        img = frame.to_ndarray(format="bgr24")
+        # Draw label background
+        cv2.rectangle(image_with_boxes, 
+                     (x, y - label_h - 10), 
+                     (x + label_w, y),
+                     color, 
+                     -1)
         
-        current_time = time.time()
-        if current_time - self.last_prediction_time >= self.prediction_interval:
-            result = predict_image(img)
-            self.current_prediction = result
-            self.last_prediction_time = current_time
-
-        if self.current_prediction:
-            img = self.current_prediction['output_image']
-            
-        return img
-
-def main():
-    # Create tabs for different functionalities
-    tab1, tab2, tab3 = st.tabs(["Home","Upload Gambar", "Real-time Detection"])
-
-    with tab1:
-        st.header("Automated Nutritional Analysis: Object Detection for Balanced Meal Evaluation According to 4 Sehat 5 Sempurna")
-        st.write("Selamat datang di Sistem Andromeda! Sistem ini membantu anda menganalisis komposisi makanan sesuai panduan gizi Indonesia '4 Sehat 5 Sempurna'.")
-        st.write("Sebagai hasil penugasan dari Startup Campus, kami telah mengembangkan aplikasi ini sebagai Final project pada track Artificial Intelligence.")
-
-        # Informasi tentang aplikasi
-        st.markdown("""
-        ### Tentang Aplikasi
-        Aplikasi ini bertujuan untuk mengembangkan **Automated Nutritional Analysis**, yaitu deteksi objek untuk evaluasi makanan sehat berdasarkan prinsip *4 Sehat 5 Sempurna*. 
-        Dengan memanfaatkan teknologi berbasis **Convolutional Neural Networks (CNN)**, aplikasi ini mampu:
-        - Menganalisis komposisi makanan.
-        - Mengevaluasi keseimbangan gizi secara otomatis.
-        - Memberikan visualisasi interaktif melalui anotasi objek pada gambar makanan.
-
-        ### Fitur Utama
-        - Deteksi dan klasifikasi makanan menggunakan **CNN**.
-        - Evaluasi otomatis keseimbangan nutrisi.
-        - Tampilan interaktif dengan anotasi visual.
-        - Mendukung edukasi masyarakat tentang gizi berbasis teknologi.
-
-        ### Teknologi yang Digunakan
-        1. **TensorFlow/Keras** untuk model CNN.
-        2. **OpenCV** untuk pemrosesan gambar.
-        3. Dataset untuk makanan dan minuman yang dihubungkan dengan Drive.
-
-        ### Prinsip 4 Sehat 5 Sempurna
-        - 🍚 **Carbohydrates (Karbohidrat)**
-        - 🥩 **Proteins (Protein)**
-        - 🥕 **Vegetables (Sayur)**
-        - 🍎 **Fruits (Buah)**
-        - 🥛 **Beverages (Minuman)**
-        """)
-
-        # Tombol untuk akses dataset di Kaggle
-        if st.button("Access Dataset on Kaggle"):
-            kaggle_url = "https://www.kaggle.com/datasets/andromedagroup05/data-4-sehat-5-sempurna/data"
-            st.warning("Anda akan diarahkan ke halaman dataset Kaggle.")
-            st.markdown(
-                f'<a href="{kaggle_url}" target="_blank" style="text-decoration:none;">'
-                '<button style="background-color:#51baff; color:white; padding:10px 20px; border:none; cursor:pointer;">'
-                '**Kunjungi Dataset di Kaggle**</button></a>',
-                unsafe_allow_html=True
-            )
+        # Draw label text
+        cv2.putText(image_with_boxes, 
+                    label,
+                    (x, y - 5),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    0.5,
+                    (255, 255, 255),
+                    2)
     
-    with tab2:
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            st.write("### Upload Gambar")
-            uploaded_file = st.file_uploader("Pilih file gambar...", type=['jpg', 'jpeg', 'png'])
-            
-            if uploaded_file is not None:
-                image = Image.open(uploaded_file)
-                st.image(image, caption='Gambar yang diunggah', use_column_width=True)
-                
-                if st.button('Analisis Gambar'):
-                    with st.spinner('Sedang menganalisis gambar...'):
-                        result = predict_image(image)
-                        
-                        if result:
-                            with col2:
-                                st.write("### Hasil Analisis")
-                                st.image(result['output_image'], 
-                                       caption='Hasil Deteksi', 
-                                       use_column_width=True)
-                                st.success(f"Kategori: {result['class'].upper()}")
-                                st.info(f"Tingkat Keyakinan: {result['confidence']:.2f}%")
-                                
-                                st.write("#### Informasi Kategori:")
-                                st.markdown(class_descriptions[result['class']])
-                                
-                                st.write("#### Distribusi Probabilitas:")
-                                for class_name, prob in result['all_probabilities'].items():
-                                    st.write(f"{class_name.title()}: {prob:.2f}%")
-                                    st.progress(prob/100)
-                                    
-    with tab3:
-        st.write("### Real-time Detection")
-        st.write("Gunakan kamera untuk deteksi makanan dan minuman secara real-time")
-        
-        # WebRTC configuration
-        rtc_configuration = RTCConfiguration(
-            {"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
-        )
-        
-        # Create WebRTC streamer
-        webrtc_ctx = webrtc_streamer(
-            key="food-detection-streamRealtime",
-            mode=WebRtcMode.SENDRECV,
-            rtc_configuration=rtc_configuration,
-            video_transformer_factory=VideoTransformer,
-            async_transform=True
-        )
+    return image_with_boxes
 
-    # Sidebar information
-    st.sidebar.title("ℹ️ Informasi Sistem")
-    st.sidebar.write("""
-    Sistem ini menggunakan model Deep Learning (CNN) untuk mengklasifikasikan
-    makanan dan minuman ke dalam 5 kategori utama.
+# def detect_objects(image, model):
+#     """Detect objects in the image"""
+#     height, width = image.shape[:2]
+#     regions = get_region_proposals(image)
+#     detections = []
     
-    **Kategori yang dapat dideteksi:**
-    - 🍎 Buah-buahan
-    - 🍚 Karbohidrat
-    - 🥤 Minuman
-    - 🍖 Protein
-    - 🥬 Sayuran
+#     for x, y, w, h in regions:
+#         # Extract region
+#         region = image[y:y+h, x:x+w]
+        
+#         # Preprocess region
+#         processed_region = preprocess_frame(region)
+        
+#         # Get predictions
+#         predictions = model.predict(processed_region, verbose=0)[0]
+#         confidence = float(np.max(predictions))
+        
+#         if confidence >= CONFIDENCE_THRESHOLD:
+#             class_idx = np.argmax(predictions)
+#             detections.append({
+#                 'box': (x, y, w, h),
+#                 'confidence': confidence,
+#                 'class': CLASS_NAMES[class_idx]
+#             })
     
-    **Cara Penggunaan:**
-    1. Upload gambar atau gunakan kamera
-    2. Sistem akan otomatis mendeteksi kategori
-    3. Lihat hasil klasifikasi
+#     return detections
+
+def detect_objects(image, model, threshold=0.5):
+    height, width = image.shape[:2]
+    regions = get_region_proposals(image)
+    detections = []
+
+    for x, y, w, h in regions:
+        # Extract region
+        region = image[y:y+h, x:x+w]
+
+        # Preprocess region
+        processed_region = preprocess_frame(region)
+
+        # Get predictions
+        predictions = model.predict(processed_region, verbose=0)[0]
+        confidence = float(np.max(predictions))
+        if confidence >= threshold:
+            class_idx = np.argmax(predictions)
+            detections.append({
+                'box': (x, y, w, h),
+                'confidence': confidence,
+                'class': CLASS_NAMES[class_idx]
+            })
+
+    return detections
+
+
+# Home page
+if selected == "Home":
+    # Judul dan deskripsi utama
+    st.title("Andromeda")
+    st.header("Automated Nutritional Analysis: Object Detection for Balanced Meal Evaluation According to 4 Sehat 5 Sempurna")
+    st.write("Final project untuk program Startup Campus pada track Artificial Intelligence.")
+    st.write("Selamat datang di sistem Andromeda! Sistem ini membantu Anda menganalisis komposisi makanan sesuai panduan gizi Indonesia '4 Sehat 5 Sempurna'.")
+
+    # Informasi tentang aplikasi
+    st.markdown("""
+    ### Tentang Aplikasi
+    Aplikasi ini bertujuan untuk mengembangkan **Automated Nutritional Analysis**, yaitu deteksi objek untuk evaluasi makanan sehat berdasarkan prinsip *4 Sehat 5 Sempurna*. 
+    Dengan memanfaatkan teknologi berbasis **Convolutional Neural Networks (CNN)**, aplikasi ini mampu:
+    - Menganalisis komposisi makanan.
+    - Mengevaluasi keseimbangan gizi secara otomatis.
+    - Memberikan visualisasi interaktif melalui anotasi objek pada gambar makanan.
+
+    ### Fitur Utama
+    - Deteksi dan klasifikasi makanan menggunakan **CNN**.
+    - Evaluasi otomatis keseimbangan nutrisi.
+    - Tampilan interaktif dengan anotasi visual.
+    - Mendukung edukasi masyarakat tentang gizi berbasis teknologi.
+
+    ### Teknologi yang Digunakan
+    1. **TensorFlow/Keras** untuk model CNN.
+    2. **OpenCV** untuk pemrosesan gambar.
+    3. Dataset untuk makanan dan minuman yang dihubungkan dengan Drive.
+
+    ### Prinsip 4 Sehat 5 Sempurna
+    - 🍚 **Carbohydrates (Karbohidrat)**
+    - 🥩 **Proteins (Protein)**
+    - 🥕 **Vegetables (Sayur)**
+    - 🍎 **Fruits (Buah)**
+    - 🥛 **Beverages (Minuman)**
+
+    ### Cara Penggunaan
+    1. Upload gambar makanan dan minuman.
+    2. Deteksi dan klasifikasi makanan dilakukan otomatis.
+    3. Evaluasi keseimbangan nutrisi.
+    4. Visualisasi dengan anotasi objek makanan.
+
     """)
 
-    # Footer
-    st.write("<p style='text-align: center;'>© 2023 Andromeda. All rights reserved.</p>", unsafe_allow_html=True)
+    # Tombol untuk akses dataset di Kaggle
+    if st.button("Access Dataset on Kaggle"):
+        kaggle_url = "https://www.kaggle.com/datasets/andromedagroup05/data-4-sehat-5-sempurna/data"
+        st.warning("Anda akan diarahkan ke halaman dataset Kaggle.")
+        # Membuka tautan di tab baru menggunakan HTML
+        st.markdown(
+            f'<a href="{kaggle_url}" target="_blank" style="text-decoration:none;">'
+            '<button style="background-color:#51baff; color:white; padding:10px 20px; border:none; cursor:pointer;">'
+            '**Kunjungi Dataset di Kaggle**</button></a>',
+            unsafe_allow_html=True
+        )
 
-    # Add a link to the GitHub repository
-    st.markdown(
-        """
-        <p style="text-align: center;">
-            <a href="https://github.com/FAISALAKBARr/Object-Detection-for-4-Sehat-5-Sempurna-Dataset-with-CNN-TensorFlow.git" target="_blank" rel="noopener noreferrer">
-                <img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white" alt="GitHub">
-            </a>
-        </p>
-        """,
-        unsafe_allow_html=True
-    )
 
-if __name__ == '__main__':
-    main()
+elif selected == "Upload Image":
+    st.title("Food Image Detection")
+
+    model = load_detection_model()
+    if model is None:
+        st.error("Failed to load model. Please check the model file.")
+    else:
+        uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
+
+        if uploaded_file is not None:
+
+            image = Image.open(uploaded_file)
+            image_np = np.array(image)
+            image_cv = cv2.cvtColor(image_np, cv2.COLOR_RGB2BGR)
+
+            col1, col2 = st.columns(2)
+            with col1:
+                st.image(image, caption="Original Image", use_container_width=True)
+            if st.button("Detect Food Items"):
+                with st.spinner("Processing..."):
+
+                    detections = detect_objects(image_cv, model, threshold=confidence_threshold)
+
+                    # Draw detection boxes
+                    result_image = draw_detection_boxes(image_cv, detections)
+                    result_image = cv2.cvtColor(result_image, cv2.COLOR_BGR2RGB)
+
+                    # Display results
+                    with col2:
+                        st.image(result_image, caption="Detection Result", use_container_width=True)
+
+                    # Display detection details
+                    st.subheader("Detection Details:")
+                    for det in detections:
+                        st.write(f"- Found {det['class']} with {det['confidence']:.2f} confidence")
+
+
+# Live Camera page
+# elif selected == "Live Camera":
+#     st.title("Live Camera Detection")
+    
+#     model = load_detection_model()
+#     if model is None:
+#         st.error("Failed to load model. Please check the model file.")
+#     else:
+#         # Add camera controls
+#         run = st.checkbox('Start Camera')
+#         FRAME_WINDOW = st.image([])
+        
+#         camera = cv2.VideoCapture(0)
+        
+#         while run:
+#             ret, frame = camera.read()
+#             if not ret:
+#                 st.error("Failed to access camera")
+#                 break
+            
+#             # Detect objects
+#             detections = detect_objects(frame, model)
+            
+#             # Draw detection boxes
+#             frame_with_detections = draw_detection_boxes(frame, detections)
+            
+#             # Convert BGR to RGB for display
+#             frame_rgb = cv2.cvtColor(frame_with_detections, cv2.COLOR_BGR2RGB)
+#             FRAME_WINDOW.image(frame_rgb)
+            
+#             # Add small delay to reduce CPU usage
+#             time.sleep(0.1)
+            
+#         camera.release()
+
+elif selected == "Live Camera":
+    st.title("Live Camera Detection")
+
+    model = load_detection_model()
+    if model is None:
+        st.error("Failed to load model. Please check the model file.")
+    else:
+        # List available cameras
+        cameras = list_available_cameras()
+        if not cameras:
+            st.error("No cameras found. Please connect a camera and refresh.")
+        else:
+            camera_index = st.selectbox("Select Camera", cameras, format_func=lambda x: f"Camera {x}")
+            run = st.checkbox("Start Camera")
+            FRAME_WINDOW = st.image([])
+            
+            if run:
+                # Open the selected camera
+                camera = cv2.VideoCapture(camera_index)
+                if not camera.isOpened():
+                    st.error(f"Failed to open camera {camera_index}.")
+                else:
+                    while run:
+                        ret, frame = camera.read()
+                        if not ret:
+                            st.error(f"Failed to read from camera {camera_index}.")
+                            break
+
+                        # Detect objects
+                        detections = detect_objects(frame, model)
+            
+                        # Draw detection boxes
+                        frame_with_detections = draw_detection_boxes(frame, detections)
+            
+                        # Convert BGR to RGB for display
+                        frame_rgb = cv2.cvtColor(frame_with_detections, cv2.COLOR_BGR2RGB)
+                        FRAME_WINDOW.image(frame_rgb)
+            
+                        # Add small delay to reduce CPU usage
+                        time.sleep(0.1)
+            
+                    camera.release()
+
+
+# import streamlit as st
+# from streamlit_option_menu import option_menu
+# import tensorflow as tf
+# import cv2
+# import numpy as np
+# from tensorflow.keras.models import load_model
+# from PIL import Image
+# import time
+# import gdown  # Import gdown untuk mengunduh dari Google Drive
+# import os
+
+# # Page configuration
+# st.set_page_config(
+#     page_title="Andromeda - Food Detection",
+#     page_icon="🍽️",
+#     layout="wide"
+# )
+
+# MODEL_ID = '1ogRogs-V0Sq-yeQi0fHrw1SmnkCZv9Nu' 
+# MODEL_PATH = 'model.h5'
+
+# # Color scheme for different food categories
+# DETECTION_COLORS = {
+#     "karbohidrat": (255, 0, 0),    # Blue
+#     "protein": (0, 255, 0),        # Green
+#     "buah": (0, 0, 255),          # Red
+#     "sayur": (255, 255, 0),       # Cyan
+#     "minuman": (255, 0, 255)      # Magenta
+# }
+
+# # Sidebar menu
+# with st.sidebar:
+#     selected = option_menu(
+#         "Main Menu", 
+#         ["Home", "Upload Image", "Live Camera"],
+#         icons=["house", "upload", "camera"],
+#         menu_icon="cast",
+#         default_index=0
+#     )
+
+# # Cache the model loading
+# @st.cache_resource
+# def load_detection_model():
+#     try:
+#         # Unduh model jika belum ada
+#         if not os.path.exists(MODEL_PATH):
+#             url = f'https://drive.google.com/uc?id=1CGZ07dPU0famhdMHIUXIEo827q46_hy1'
+#             st.info("Downloading model from Google Drive...")
+#             gdown.download(url, MODEL_PATH, quiet=False)
+
+#         model = load_model(MODEL_PATH)
+#         return model
+#     except Exception as e:
+#         st.error(f"Error loading model: {str(e)}")
+#         return None
+
+#     # try:
+#     #     model = load_model('./model/model.h5')
+#     #     return model
+#     # except Exception as e:
+#     #     st.error(f"Error loading model: {str(e)}")
+#     #     return None
+
+# # Global variables
+# CLASS_NAMES = ["karbohidrat", "protein", "buah", "sayur", "minuman"]
+# CONFIDENCE_THRESHOLD = 0.5
+
+# def preprocess_frame(frame, target_size=(224, 224)):
+#     """Preprocess frame for model input"""
+#     processed_frame = cv2.resize(frame, target_size)
+#     processed_frame = processed_frame.astype("float32") / 255.0
+#     processed_frame = np.expand_dims(processed_frame, axis=0)
+#     return processed_frame
+
+# def get_region_proposals(image):
+#     """Get region proposals using contour detection"""
+#     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+#     blur = cv2.GaussianBlur(gray, (5, 5), 0)
+#     _, thresh = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+#     contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    
+#     regions = []
+#     for contour in contours:
+#         x, y, w, h = cv2.boundingRect(contour)
+#         if w > 50 and h > 50:  # Minimum size threshold
+#             regions.append((x, y, w, h))
+#     return regions
+
+# def draw_detection_boxes(image, detections):
+#     """Draw detection boxes with labels and confidence scores"""
+#     image_with_boxes = image.copy()
+    
+#     for det in detections:
+#         x, y, w, h = det['box']
+#         class_name = det['class']
+#         confidence = det['confidence']
+#         color = DETECTION_COLORS.get(class_name, (0, 255, 0))
+        
+#         # Draw bounding box
+#         cv2.rectangle(image_with_boxes, (x, y), (x + w, y + h), color, 2)
+        
+#         # Create label with class name and confidence
+#         label = f"{class_name}: {confidence:.2f}"
+        
+#         # Get label size
+#         (label_w, label_h), baseline = cv2.getTextSize(
+#             label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 2)
+        
+#         # Draw label background
+#         cv2.rectangle(image_with_boxes, 
+#                      (x, y - label_h - 10), 
+#                      (x + label_w, y),
+#                      color, 
+#                      -1)
+        
+#         # Draw label text
+#         cv2.putText(image_with_boxes, 
+#                     label,
+#                     (x, y - 5),
+#                     cv2.FONT_HERSHEY_SIMPLEX,
+#                     0.5,
+#                     (255, 255, 255),
+#                     2)
+    
+#     return image_with_boxes
+
+# def detect_objects(image, model):
+#     """Detect objects in the image"""
+#     height, width = image.shape[:2]
+#     regions = get_region_proposals(image)
+#     detections = []
+    
+#     for x, y, w, h in regions:
+#         # Extract region
+#         region = image[y:y+h, x:x+w]
+        
+#         # Preprocess region
+#         processed_region = preprocess_frame(region)
+        
+#         # Get predictions
+#         predictions = model.predict(processed_region, verbose=0)[0]
+#         confidence = float(np.max(predictions))
+        
+#         if confidence >= CONFIDENCE_THRESHOLD:
+#             class_idx = np.argmax(predictions)
+#             detections.append({
+#                 'box': (x, y, w, h),
+#                 'confidence': confidence,
+#                 'class': CLASS_NAMES[class_idx]
+#             })
+    
+#     return detections
+
+# # Home page
+# if selected == "Home":
+#     st.title("Andromeda")
+#     st.header("Automated Nutritional Analysis: Object Detection for Balanced Meal Evaluation According to 4 Sehat 5 Sempurna")
+    
+#     # Add more detailed information about the system
+#     st.markdown("""
+#     ### About the System
+#     This system helps you analyze food items according to the Indonesian healthy eating guide "4 Sehat 5 Sempurna".
+    
+#     The system can detect:
+#     - 🍚 Carbohydrates (Karbohidrat)
+#     - 🥩 Proteins (Protein)
+#     - 🥕 Vegetables (Sayur)
+#     - 🍎 Fruits (Buah)
+#     - 🥛 Beverages (Minuman)
+#     """)
+
+# # Upload Image page
+# elif selected == "Upload Image":
+#     st.title("Food Image Detection")
+    
+#     model = load_detection_model()
+#     if model is None:
+#         st.error("Failed to load model. Please check the model file.")
+#     else:
+#         uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
+        
+#         if uploaded_file is not None:
+#             # Load and display original image
+#             image = Image.open(uploaded_file)
+#             image_np = np.array(image)
+#             image_cv = cv2.cvtColor(image_np, cv2.COLOR_RGB2BGR)
+            
+#             col1, col2 = st.columns(2)
+#             with col1:
+#                 st.image(image, caption="Original Image", use_column_width=True)
+            
+#             # Process image
+#             if st.button("Detect Food Items"):
+#                 with st.spinner("Processing..."):
+#                     # Detect objects
+#                     detections = detect_objects(image_cv, model)
+                    
+#                     # Draw detection boxes
+#                     result_image = draw_detection_boxes(image_cv, detections)
+#                     result_image = cv2.cvtColor(result_image, cv2.COLOR_BGR2RGB)
+                    
+#                     # Display results
+#                     with col2:
+#                         st.image(result_image, caption="Detection Result", use_column_width=True)
+                    
+#                     # Display detection details
+#                     st.subheader("Detection Details:")
+#                     for det in detections:
+#                         st.write(f"- Found {det['class']} with {det['confidence']:.2f} confidence")
+
+# # Live Camera page
+# elif selected == "Live Camera":
+#     st.title("Live Camera Detection")
+    
+#     model = load_detection_model()
+#     if model is None:
+#         st.error("Failed to load model. Please check the model file.")
+#     else:
+#         # Add camera controls
+#         run = st.checkbox('Start Camera')
+#         FRAME_WINDOW = st.image([])
+        
+#         camera = cv2.VideoCapture(0)
+        
+#         while run:
+#             ret, frame = camera.read()
+#             if not ret:
+#                 st.error("Failed to access camera")
+#                 break
+            
+#             # Detect objects
+#             detections = detect_objects(frame, model)
+            
+#             # Draw detection boxes
+#             frame_with_detections = draw_detection_boxes(frame, detections)
+            
+#             # Convert BGR to RGB for display
+#             frame_rgb = cv2.cvtColor(frame_with_detections, cv2.COLOR_BGR2RGB)
+#             FRAME_WINDOW.image(frame_rgb)
+            
+#             # Add small delay to reduce CPU usage
+#             time.sleep(0.1)
+            
+#         camera.release()
