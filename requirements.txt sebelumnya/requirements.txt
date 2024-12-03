@@ -6,5 +6,5 @@ numpy
 pillow
 gdown
 requests
-
-
+streamlit-webrtc
+tensorflow-io-gcs-filesystem
