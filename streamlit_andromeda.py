@@ -60,16 +60,18 @@ st.set_page_config(
 
 #     save_response_content(response, destination)
 
-MODEL_ID = '1CGZ07dPU0famhdMHIUXIEo827q46_hy1' 
-MODEL_PATH = 'model.h5'
+# MODEL_ID = '1CGZ07dPU0famhdMHIUXIEo827q46_hy1' 
+# MODEL_PATH = 'model.h5'
+MODEL_ID = '1bGaEkxacdFkOLkZNzl32-y-ZMbJvtKT1' 
+MODEL_PATH = 'FINAL_MODEL.h5'
 
 # Color scheme for different food categories
 DETECTION_COLORS = {
-    "karbohidrat": (255, 0, 0),    # Blue
-    "protein": (0, 255, 0),        # Green
-    "buah": (0, 0, 255),          # Red
-    "sayur": (255, 255, 0),       # Cyan
-    "minuman": (255, 0, 255)      # Magenta
+    "buah": (0, 0, 255),            # Red
+    "karbohidrat": (255, 255, 0),   # Cyan
+    "minuman": (255, 0, 0),         # Blue
+    "protein": (255, 0, 255),       # Magenta
+    "sayur": (0, 255, 0)            # Green
 }
 
 # Sidebar menu
@@ -125,7 +127,7 @@ def load_detection_model():
     try:
         # Unduh model jika belum ada
         if not os.path.exists(MODEL_PATH):
-            url = f'https://drive.google.com/uc?id=1CGZ07dPU0famhdMHIUXIEo827q46_hy1'
+            url = f'https://drive.google.com/uc?id=1bGaEkxacdFkOLkZNzl32-y-ZMbJvtKT1'
             st.info("Downloading model from Google Drive")
             gdown.download(url, MODEL_PATH, quiet=False)
 
