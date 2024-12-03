@@ -1,0 +1,10 @@
+streamlit
+streamlit-option-menu
+tensorflow
+opencv-python-headless
+numpy
+pillow
+gdown
+requests
+
+
