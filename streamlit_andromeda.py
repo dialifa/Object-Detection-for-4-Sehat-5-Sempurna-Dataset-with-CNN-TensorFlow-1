@@ -30,7 +30,7 @@ st.markdown("""
     .stButton>button {
         width: 100%;
         margin-top: 20px;
-        background-color: #4CAF50;
+        background-color: #9ad5fc;
         color: white;
     }
     .prediction-box {
