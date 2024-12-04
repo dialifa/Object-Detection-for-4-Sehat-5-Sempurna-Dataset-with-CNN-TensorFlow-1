@@ -18,7 +18,7 @@ st.set_page_config(
     layout="wide"
 )
 
-MODEL_ID = '1bGaEkxacdFkOLkZNzl32-y-ZMbJvtKT1' 
+MODEL_ID = '1catZKB9HcjHt4FC40bRyeVvE-P24Ev_Q' 
 MODEL_PATH = 'FINAL_MODEL.h5'
 
 # Custom CSS untuk styling
