@@ -194,10 +194,11 @@ def main():
     with tab1:
         st.header("Automated Nutritional Analysis: Object Detection for Balanced Meal Evaluation According to 4 Sehat 5 Sempurna")
         st.write("Selamat datang di Sistem Andromeda! Sistem ini membantu anda menganalisis komposisi makanan sesuai panduan gizi Indonesia '4 Sehat 5 Sempurna'.")
-        st.write("Sebagai hasil penugasan dari Startup Campus, kami telah mengembangkan aplikasi ini sebagai Final project pada track Artificial Intelligence.\n\n")
+        st.write("Sebagai hasil penugasan dari Startup Campus, kami telah mengembangkan aplikasi ini sebagai Final project pada track Artificial Intelligence.")
 
         # Informasi tentang aplikasi
         st.markdown("""
+        \n\n
         ### Tentang Aplikasi
         Aplikasi ini bertujuan untuk mengembangkan **Automated Nutritional Analysis**, yaitu deteksi objek untuk evaluasi makanan sehat berdasarkan prinsip *4 Sehat 5 Sempurna*. 
         Dengan memanfaatkan teknologi berbasis **Convolutional Neural Networks (CNN)**, aplikasi ini mampu:
