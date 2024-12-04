@@ -70,12 +70,12 @@ Sayur
 Buah
 
 
-<img src="https://github.com/FAISALAKBARr/Object-Detection-for-Balanced-Meal-Evaluation-According-to-4-Sehat-5-Sempurna/blob/main/demo%20test/buah/Image%20(2).jpg" width="200" height="200">
+<img src="https://github.com/FAISALAKBARr/Object-Detection-for-Balanced-Meal-Evaluation-According-to-4-Sehat-5-Sempurna/blob/main/demo%20test/buah/Image%20(2).jpg" width="200" height="200"> 
 
 Minuman
 
 
-<img src="https://github.com/FAISALAKBARr/Object-Detection-for-Balanced-Meal-Evaluation-According-to-4-Sehat-5-Sempurna/blob/main/demo%20test/minuman/Images(8).jpg" width="200" height="200">
+<img src="https://github.com/FAISALAKBARr/Object-Detection-for-Balanced-Meal-Evaluation-According-to-4-Sehat-5-Sempurna/blob/main/demo%20test/minuman/Images(6).jpg" width="200" height="200">
 
 
 ## Results

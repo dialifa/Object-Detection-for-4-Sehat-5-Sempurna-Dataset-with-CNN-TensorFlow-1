@@ -6,10 +6,11 @@ import matplotlib.pyplot as plt
 from time import time
 
 # Load model
-model = load_model('best_model.h5')
+model = load_model('FINAL_MODEL.h5')
 
 # Define class names
-class_names = ['karbohidrat', 'protein', 'sayur', 'buah', 'minuman']
+# class_names = ['karbohidrat', 'protein', 'sayur', 'buah', 'minuman']
+class_names = ['buah', 'karbohidrat', 'minuman', 'protein', 'sayur']
 
 def preprocess_image(image):
     image = cv2.resize(image, (224, 224))
