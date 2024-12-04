@@ -128,92 +128,40 @@ def preprocess_image(image, target_size=(224, 224)):
 
 def predict_image(image):
     """
-    Make prediction with multiple object detection and draw bounding boxes
+    Make prediction on preprocessed image and draw bounding box
     """
     try:
         processed_image, original_image = preprocess_image(image)
         predictions = model.predict(processed_image, verbose=0)
+        predicted_class_index = np.argmax(predictions[0])
+        confidence = float(predictions[0][predicted_class_index])
         
         # Get image dimensions
         height, width = original_image.shape[:2]
+        
+        # Draw bounding box
         output_image = original_image.copy()
+        color = (0, 255, 0)  # Green color for box
+        thickness = 2
         
-        # Threshold untuk confidence score
-        CONFIDENCE_THRESHOLD = 0.3
+        # Draw box around detected object
+        start_point = (10, 10)
+        end_point = (width - 10, height - 10)
+        cv2.rectangle(output_image, start_point, end_point, color, thickness)
         
-        detected_objects = []
-        
-        # Analyze all predictions above threshold
-        for class_idx, confidence in enumerate(predictions[0]):
-            if confidence > CONFIDENCE_THRESHOLD:
-                # Calculate dynamic bounding box size based on confidence
-                box_size = int(min(width, height) * (confidence * 0.5))
-                
-                # Calculate center point
-                center_x = width // 2
-                center_y = height // 2
-                
-                # Calculate box coordinates
-                x1 = max(0, center_x - box_size // 2)
-                y1 = max(0, center_y - box_size // 2)
-                x2 = min(width, center_x + box_size // 2)
-                y2 = min(height, center_y + box_size // 2)
-                
-                # Generate random color for this class
-                color = (
-                    np.random.randint(0, 255),
-                    np.random.randint(0, 255),
-                    np.random.randint(0, 255)
-                )
-                
-                # Draw bounding box
-                cv2.rectangle(output_image, (x1, y1), (x2, y2), color, 2)
-                
-                # Add label with class name and confidence
-                label = f"{class_names[class_idx]}: {confidence * 100:.2f}%"
-                label_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.6, 2)[0]
-                
-                # Ensure label background doesn't go outside image
-                label_y = max(y1, label_size[1] + 10)
-                
-                # Draw label background
-                cv2.rectangle(output_image, 
-                            (x1, label_y - label_size[1] - 10),
-                            (x1 + label_size[0], label_y),
-                            color, -1)
-                
-                # Draw label text
-                cv2.putText(output_image, label,
-                           (x1, label_y - 5),
-                           cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
-                
-                detected_objects.append({
-                    'class': class_names[class_idx],
-                    'confidence': confidence * 100,
-                    'bbox': (x1, y1, x2, y2)
-                })
-        
-        # Sort detected objects by confidence
-        detected_objects.sort(key=lambda x: x['confidence'], reverse=True)
-        
-        # Calculate overall probabilities
-        all_probabilities = {
-            class_names[i]: float(predictions[0][i]) * 100 
-            for i in range(len(class_names))
-        }
-        
-        # Get primary class (highest confidence)
-        primary_class = detected_objects[0]['class'] if detected_objects else class_names[np.argmax(predictions[0])]
-        primary_confidence = detected_objects[0]['confidence'] if detected_objects else float(np.max(predictions[0])) * 100
+        # Add label with class name and confidence
+        label = f"{class_names[predicted_class_index]}: {confidence * 100:.2f}%"
+        label_position = (start_point[0], start_point[1] - 10)
+        cv2.putText(output_image, label, label_position, 
+                   cv2.FONT_HERSHEY_SIMPLEX, 0.6, color, 2)
         
         return {
-            'class': primary_class,
-            'confidence': primary_confidence,
-            'all_probabilities': all_probabilities,
-            'output_image': output_image,
-            'detected_objects': detected_objects
+            'class': class_names[predicted_class_index],
+            'confidence': confidence * 100,
+            'all_probabilities': {class_names[i]: float(predictions[0][i]) * 100 
+                                for i in range(len(class_names))},
+            'output_image': output_image
         }
-        
     except Exception as e:
         st.error(f"Error during prediction: {str(e)}")
         return None
@@ -224,7 +172,6 @@ class VideoTransformer(VideoTransformerBase):
         self.last_prediction_time = time.time()
         self.prediction_interval = 1.0  # Predict every 1 second
         self.current_prediction = None
-        self.detection_history = []  # Untuk tracking deteksi sebelumnya
 
     def transform(self, frame):
         img = frame.to_ndarray(format="bgr24")
@@ -234,24 +181,9 @@ class VideoTransformer(VideoTransformerBase):
             result = predict_image(img)
             self.current_prediction = result
             self.last_prediction_time = current_time
-            
-            if result and 'detected_objects' in result:
-                self.detection_history = result['detected_objects'][-5:]  # Simpan 5 deteksi terakhir
 
         if self.current_prediction:
             img = self.current_prediction['output_image']
-            
-            # Tambahkan overlay informasi
-            height, width = img.shape[:2]
-            overlay = np.zeros((height, width, 3), dtype=np.uint8)
-            
-            # Tampilkan informasi deteksi
-            y_offset = 30
-            for det in self.detection_history:
-                text = f"{det['class']}: {det['confidence']:.1f}%"
-                cv2.putText(img, text, (10, y_offset),
-                           cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
-                y_offset += 25
             
         return img
 
@@ -324,12 +256,11 @@ def main():
                                 st.image(result['output_image'], 
                                        caption='Hasil Deteksi', 
                                        use_column_width=True)
+                                st.success(f"Kategori: {result['class'].upper()}")
+                                st.info(f"Tingkat Keyakinan: {result['confidence']:.2f}%")
                                 
-                                # Tampilkan informasi objek yang terdeteksi
-                                st.write("#### Objek Terdeteksi:")
-                                for idx, obj in enumerate(result['detected_objects'], 1):
-                                    with st.expander(f"Objek {idx}: {obj['class'].upper()} - {obj['confidence']:.2f}%"):
-                                        st.markdown(class_descriptions[obj['class']])
+                                st.write("#### Informasi Kategori:")
+                                st.markdown(class_descriptions[result['class']])
                                 
                                 st.write("#### Distribusi Probabilitas:")
                                 for class_name, prob in result['all_probabilities'].items():
