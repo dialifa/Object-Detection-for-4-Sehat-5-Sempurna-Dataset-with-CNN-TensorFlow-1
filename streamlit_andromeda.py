@@ -344,6 +344,7 @@ def main():
     
     with tab2:
         col1, col2 = st.columns(2)
+        result = None
         
         with col1:
             st.write("### Yuk Analisis Hidanganmu!")
@@ -371,7 +372,7 @@ def main():
                                 """, unsafe_allow_html=True)
         
         with col2:
-            if uploaded_file is not None and result:
+            if uploaded_file is not None and result is not None:
                 st.write("### Probabilitas per Kategori:")
                 for class_name, prob in result['all_probabilities'].items():
                     st.progress(prob / 100)
