@@ -194,7 +194,7 @@ def main():
     with tab1:
         st.header("Automated Nutritional Analysis: Object Detection for Balanced Meal Evaluation According to 4 Sehat 5 Sempurna")
         st.write("Selamat datang di Sistem Andromeda! Sistem ini membantu anda menganalisis komposisi makanan sesuai panduan gizi Indonesia '4 Sehat 5 Sempurna'.")
-        st.write("Sebagai hasil penugasan dari Startup Campus, kami telah mengembangkan aplikasi ini sebagai Final project pada track Artificial Intelligence.")
+        st.write("Sebagai hasil penugasan dari Startup Campus, kami telah mengembangkan aplikasi ini sebagai Final project pada track Artificial Intelligence.\n\n")
 
         # Informasi tentang aplikasi
         st.markdown("""
@@ -225,13 +225,13 @@ def main():
         """)
 
         # Tombol untuk akses dataset di Kaggle
-        if st.button("Access Dataset on Kaggle"):
+        if st.button("Kepo dataset lengkap nya nih??"):
             kaggle_url = "https://www.kaggle.com/datasets/andromedagroup05/data-4-sehat-5-sempurna/data"
-            st.warning("Anda akan diarahkan ke halaman dataset Kaggle.")
+            st.warning("Kamu akan diarahkan ke halaman dataset di Kaggle.")
             st.markdown(
                 f'<a href="{kaggle_url}" target="_blank" style="text-decoration:none;">'
                 '<button style="background-color:#51baff; color:white; padding:10px 20px; border:none; cursor:pointer;">'
-                '**Kunjungi Dataset di Kaggle**</button></a>',
+                '**Klik di sini yah!**</button></a>',
                 unsafe_allow_html=True
             )
     
@@ -239,14 +239,14 @@ def main():
         col1, col2 = st.columns(2)
         
         with col1:
-            st.write("### Upload Gambar")
+            st.write("### Yuk Analisis Hidanganmu!")
             uploaded_file = st.file_uploader("Pilih file gambar...", type=['jpg', 'jpeg', 'png'])
             
             if uploaded_file is not None:
                 image = Image.open(uploaded_file)
                 st.image(image, caption='Gambar yang diunggah', use_column_width=True)
                 
-                if st.button('Analisis Gambar'):
+                if st.button('GO!'):
                     with st.spinner('Sedang menganalisis gambar...'):
                         result = predict_image(image)
                         
