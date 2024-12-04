@@ -197,18 +197,13 @@ def main():
         st.write("Andromeda telah mengembangkan aplikasi ini sebagai hasil penugasan Final project pada track Artificial Intelligence, Startup Campus.")
 
         # Informasi tentang aplikasi
-        st.markdown("""
-        
-        
-
+        st.markdown(""" 
         ### Tentang Aplikasi
         Aplikasi ini bertujuan untuk mengembangkan **Automated Nutritional Analysis**, yaitu deteksi objek untuk evaluasi makanan sehat berdasarkan prinsip *4 Sehat 5 Sempurna*. 
         Dengan memanfaatkan teknologi berbasis **Convolutional Neural Networks (CNN)**, aplikasi ini mampu:
         - Menganalisis komposisi makanan.
         - Mengevaluasi keseimbangan gizi secara otomatis.
-        - Memberikan visualisasi interaktif melalui anotasi objek pada gambar makanan.
-                    
-                    
+        - Memberikan visualisasi interaktif melalui anotasi objek pada gambar makanan.      
 
         ### Fitur Utama
         - Deteksi dan klasifikasi makanan menggunakan **CNN**.
@@ -221,8 +216,6 @@ def main():
         2. **OpenCV** untuk pemrosesan gambar.
         3. Dataset untuk makanan dan minuman yang dihubungkan dengan Drive.
                     
-                    
-
         ### Prinsip 4 Sehat 5 Sempurna
         - 🍚 **Carbohydrates (Karbohidrat)**
         - 🥩 **Proteins (Protein)**
