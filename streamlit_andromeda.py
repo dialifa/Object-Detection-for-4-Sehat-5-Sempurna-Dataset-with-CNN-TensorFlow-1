@@ -194,17 +194,21 @@ def main():
     with tab1:
         st.header("Automated Nutritional Analysis: Object Detection for Balanced Meal Evaluation According to 4 Sehat 5 Sempurna")
         st.write("Selamat datang di Sistem Andromeda! Sistem ini membantu anda menganalisis komposisi makanan sesuai panduan gizi Indonesia '4 Sehat 5 Sempurna'.")
-        st.write("Sebagai hasil penugasan dari Startup Campus, kami telah mengembangkan aplikasi ini sebagai Final project pada track Artificial Intelligence.")
+        st.write("Andromeda telah mengembangkan aplikasi ini sebagai hasil penugasan Final project pada track Artificial Intelligence, Startup Campus.")
 
         # Informasi tentang aplikasi
         st.markdown("""
-        \n\n
+        
+        
+
         ### Tentang Aplikasi
         Aplikasi ini bertujuan untuk mengembangkan **Automated Nutritional Analysis**, yaitu deteksi objek untuk evaluasi makanan sehat berdasarkan prinsip *4 Sehat 5 Sempurna*. 
         Dengan memanfaatkan teknologi berbasis **Convolutional Neural Networks (CNN)**, aplikasi ini mampu:
         - Menganalisis komposisi makanan.
         - Mengevaluasi keseimbangan gizi secara otomatis.
         - Memberikan visualisasi interaktif melalui anotasi objek pada gambar makanan.
+                    
+                    
 
         ### Fitur Utama
         - Deteksi dan klasifikasi makanan menggunakan **CNN**.
@@ -216,6 +220,8 @@ def main():
         1. **TensorFlow/Keras** untuk model CNN.
         2. **OpenCV** untuk pemrosesan gambar.
         3. Dataset untuk makanan dan minuman yang dihubungkan dengan Drive.
+                    
+                    
 
         ### Prinsip 4 Sehat 5 Sempurna
         - 🍚 **Carbohydrates (Karbohidrat)**
@@ -226,7 +232,7 @@ def main():
         """)
 
         # Tombol untuk akses dataset di Kaggle
-        if st.button("Kepo dataset lengkap nya nih??"):
+        if st.button("Kepo sama dataset lengkap nya??"):
             kaggle_url = "https://www.kaggle.com/datasets/andromedagroup05/data-4-sehat-5-sempurna/data"
             st.warning("Kamu akan diarahkan ke halaman dataset di Kaggle.")
             st.markdown(
